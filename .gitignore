@@ -1,0 +1,10 @@
+.env
+articles/
+__pycache__/
+*.pyc
+.vscode/
+.idea/
+*.docx
+*.pdf
+# 排除 Documents 目录，除非您想把业务文档也传上去
+# Documents/

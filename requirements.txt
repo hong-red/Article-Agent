@@ -1,0 +1,7 @@
+openai>=1.0.0
+python-dotenv
+python-docx
+requests
+wechatpy
+cryptography
+markdown
