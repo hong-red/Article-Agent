@@ -40,7 +40,7 @@ for fname,url in urls:
     local="assets/img"+idx+"_"
     html=re.sub(r'src="'+local+r'[^"]*"','src="'+url+'"',html)
 
-articles=[{"title":"走进平谷渔村：一支大学生队伍的三天四村调研纪实","author":"数智渔韵","digest":"北京印刷学院千人百村实践队，用三天时间走访平谷四个渔村，记录下养鱼人的真实故事。","content":html,"content_source_url":"","thumb_media_id":thumb,"need_open_comment":1,"only_fans_can_comment":0}]
+articles=[{"title":"走进平谷渔村：三天四村调研纪实","author":"数智渔韵","digest":"北京印刷学院千人百村实践队，用三天时间走访平谷四个渔村，记录下养鱼人的真实故事。","content":html,"content_source_url":"","thumb_media_id":thumb,"need_open_comment":1,"only_fans_can_comment":0}]
 print("Creating draft...")
 r=requests.post("https://api.weixin.qq.com/cgi-bin/draft/add?access_token="+token,json={"articles":articles})
 d=r.json()
