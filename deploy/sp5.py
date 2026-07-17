@@ -27,9 +27,10 @@ HTML_CONTENT="""<section style="font-family:-apple-system,BlinkMacSystemFont,'Pi
 
 <p style="margin-bottom:16px;text-align:justify;">四个村子的鱼塘里，你一定能看到的东西就是增氧机。它几乎是养鱼业最基础的设备——没有之一。</p>
 
-IMG_PLACEHOLDER_1
-
-<p style="text-align:center;font-size:12px;color:#7a7a7a;margin:0 0 20px 0;">北定福村的鱼塘，三台增氧机同时运转，水面翻起白色浪花</p>
+<section style="text-align:center;margin:24px 0;">
+  <img src="IMG_PLACEHOLDER_1" alt="增氧机全景" style="max-width:100%;display:block;margin:0 auto;">
+  <p style="font-size:13px;color:#888;margin-top:8px;font-style:italic;">北定福村的鱼塘，三台增氧机同时运转，水面翻起白色浪花</p>
+</section>
 
 <p style="margin-bottom:16px;text-align:justify;">增氧机的原理很简单：通过电机带动叶轮高速旋转，把水打向空中，让水和空气充分接触，从而增加水中的溶解氧。鱼密度越高，耗氧越大，增氧机就必须开得越久。</p>
 
@@ -37,17 +38,19 @@ IMG_PLACEHOLDER_1
 
 <p style="margin-bottom:16px;text-align:justify;">一台增氧机几千块钱，寿命五到十年。对于小户养殖户来说，这是最大的单项设备投入。自动投喂机要三四千，他们说"太贵了"；但增氧机再贵也得买——因为鱼会缺氧。</p>
 
-IMG_PLACEHOLDER_2
-
-<p style="text-align:center;font-size:12px;color:#7a7a7a;margin:0 0 20px 0;">增氧机的黄色叶轮和蓝色浮筒，是鱼塘最醒目的"标志物"</p>
+<section style="text-align:center;margin:24px 0;">
+  <img src="IMG_PLACEHOLDER_2" alt="增氧机特写" style="max-width:100%;display:block;margin:0 auto;">
+  <p style="font-size:13px;color:#888;margin-top:8px;font-style:italic;">增氧机的黄色叶轮和蓝色浮筒，是鱼塘最醒目的"标志物"</p>
+</section>
 
 <h2 style="font-size:20px;font-weight:700;margin-top:40px;margin-bottom:16px;padding-bottom:8px;border-bottom:2px solid #3a8a8a;color:#222;display:inline-block;">防鸟网：一场无声的攻防战</h2>
 
 <p style="margin-bottom:16px;text-align:justify;">如果你仔细看鱼塘的上空，你会发现一层层细密的网。这不是渔网，是防鸟网。</p>
 
-IMG_PLACEHOLDER_3
-
-<p style="text-align:center;font-size:12px;color:#7a7a7a;margin:0 0 20px 0;">鱼塘上空拉起的防鸟网，在阳光下几乎透明</p>
+<section style="text-align:center;margin:24px 0;">
+  <img src="IMG_PLACEHOLDER_3" alt="防鸟网" style="max-width:100%;display:block;margin:0 auto;">
+  <p style="font-size:13px;color:#888;margin-top:8px;font-style:italic;">鱼塘上空拉起的防鸟网，在阳光下几乎透明</p>
+</section>
 
 <p style="margin-bottom:16px;text-align:justify;">天井村的养殖户跟我们提到过一个让人头疼的问题："鸟类叼鱼"。白鹭、苍鹭、翠鸟……这些在生态摄影里被拍得美轮美奂的鸟，在养殖户眼里就是"偷鱼贼"。一批鱼苗放下去，被鸟吃掉的比例可不是小数目。</p>
 
@@ -59,17 +62,19 @@ IMG_PLACEHOLDER_3
 
 <p style="margin-bottom:16px;text-align:justify;">大一点的鱼塘，岸边够不着中间，就需要一条船。我们看到的渔船都很朴素——木板拼成的小划子，没有马达，靠竹篙或桨划行。</p>
 
-IMG_PLACEHOLDER_4
-
-<p style="text-align:center;font-size:12px;color:#7a7a7a;margin:0 0 20px 0;">一艘简易木船停在岸边，船里放着塑料桶和饲料箱</p>
+<section style="text-align:center;margin:24px 0;">
+  <img src="IMG_PLACEHOLDER_4" alt="木船" style="max-width:100%;display:block;margin:0 auto;">
+  <p style="font-size:13px;color:#888;margin-top:8px;font-style:italic;">一艘简易木船停在岸边，船里放着塑料桶和饲料箱</p>
+</section>
 
 <p style="margin-bottom:16px;text-align:justify;">船的主要用途不是"捕鱼"，而是日常管理：撒饲料、巡塘、检查网具、捞死鱼。养殖户每天要在塘上跑好几趟，船就是他们的"水上自行车"。</p>
 
 <p style="margin-bottom:16px;text-align:justify;">比船更有意思的是浮台。下面这张照片里，你能看到一个用废旧铁架、木板和煤气罐拼出来的简易浮台：</p>
 
-IMG_PLACEHOLDER_5
-
-<p style="text-align:center;font-size:12px;color:#7a7a7a;margin:0 0 20px 0;">养殖户自制的浮台，用废旧煤气罐当浮筒，实用主义满分</p>
+<section style="text-align:center;margin:24px 0;">
+  <img src="IMG_PLACEHOLDER_5" alt="自制浮台" style="max-width:100%;display:block;margin:0 auto;">
+  <p style="font-size:13px;color:#888;margin-top:8px;font-style:italic;">养殖户自制的浮台，用废旧煤气罐当浮筒，实用主义满分</p>
+</section>
 
 <p style="margin-bottom:16px;text-align:justify;">没错，那四个圆滚滚的灰色东西是废旧煤气罐。把它们密封起来固定在铁架两侧，就有了浮力，上面铺上木板就是一个稳固的平台。浮台的一端还放着一个黑色电箱，可能是增氧机或投喂机的控制面板。</p>
 
@@ -79,9 +84,10 @@ IMG_PLACEHOLDER_5
 
 <p style="margin-bottom:16px;text-align:justify;">别看鱼塘在郊外田野里，它们也是要用电的。增氧机、水泵、照明，全靠电力驱动。</p>
 
-IMG_PLACEHOLDER_6
-
-<p style="text-align:center;font-size:12px;color:#7a7a7a;margin:0 0 20px 0;">塘边的电线杆和控制箱，为增氧机等设备供电</p>
+<section style="text-align:center;margin:24px 0;">
+  <img src="IMG_PLACEHOLDER_6" alt="控制箱" style="max-width:100%;display:block;margin:0 auto;">
+  <p style="font-size:13px;color:#888;margin-top:8px;font-style:italic;">塘边的电线杆和控制箱，为增氧机等设备供电</p>
+</section>
 
 <p style="margin-bottom:16px;text-align:justify;">电线从村子里拉出来，沿着塘边的电线杆延伸到各个增氧机的位置。控制箱通常是简单的防水电盒，里面就是开关和接触器。没有什么智能面板、远程控制——要开机就走到电箱前面，手动合闸。</p>
 
