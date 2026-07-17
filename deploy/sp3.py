@@ -180,7 +180,7 @@ def upload_thumb(path,token):
     print("thumb ERR:",d);return None
 
 def main():
-    cover_path=dl_cover("deploy/img3.jpg")
+    cover_path=dl_cover("deploy/article2/img1.jpg")
     if not cover_path:return
     token=get_token()
     if not token:return
