@@ -16,6 +16,7 @@
 \usepackage{fancyhdr}
 \usepackage{setspace}
 \usepackage{amsmath}
+\usepackage{subcaption}
 
 % ==================== 页面设置 ====================
 \onehalfspacing
@@ -35,7 +36,7 @@
 % ==================== 文档信息 ====================
 \title{
     \vspace{-1cm}
-    {\LARGE\bfseries 数智赋能平谷传统渔业转型：\\[6pt] 基于四村实地调研的现状分析与路径探索}
+    {\LARGE\bfseries 数智赋能平谷传统渔业转型：\\[6pt] 基于多村实地调研的现状分析与路径探索}
 }
 \author{
     北京印刷学院\;"千人百村"实践队\;"数智渔韵"课题组 \\[4pt]
@@ -55,9 +56,9 @@
 \end{center}
 \vspace{0.3cm}
 
-\noindent 乡村振兴战略背景下，北京市平谷区凭借独特的区位优势和渔业资源，成为首都都市型现代渔业发展的重要区域。然而，传统淡水养殖业正面临鱼价停滞、从业人员老龄化、销售渠道单一、智能化程度低等多重困境。本文基于2026年7月14日至16日对平谷区北定福村、东双营镇、天井村、马昌营村四个渔村的实地调研，通过半结构化访谈和参与式观察，系统梳理了平谷渔业的生产现状与核心痛点，发现鱼价十年未涨、年轻人全部外流、利润被中间商截取、设备更新滞后、水质管理依赖经验等八大结构性问题。在此基础上，结合天井村生态养殖的成功案例，提出智能投喂试点、统一品牌电商、生态模式推广、休闲渔业开发等数智化转型路径，以期为平谷乃至华北地区传统渔业的现代化升级提供参考。
+\noindent 乡村振兴战略背景下，北京市平谷区凭借独特的区位优势和渔业资源，成为首都都市型现代渔业发展的重要区域。然而，传统淡水养殖业正面临鱼价停滞、从业人员老龄化、销售渠道单一、智能化程度低等多重困境。本文基于2026年7月14日至17日对平谷区北定福村、东双营镇、天井村、马昌营村、王各庄村等多个村庄的实地调研，通过半结构化访谈和参与式观察，系统梳理了平谷渔业及相关产业的生产现状与核心痛点。调研发现，鱼价十年未涨、年轻人全部外流、利润被中间商截取、设备更新滞后、水质管理依赖经验等结构性问题普遍存在；同时，平谷区已建立"坑塘长制"等基层治理机制，东双营镇的宠物文化产业转型也为渔业升级提供了产业融合的参照。本文结合天井村生态养殖的成功案例，提出智能投喂试点、统一品牌电商、生态模式推广、休闲渔业开发等数智化转型路径，以期为平谷乃至华北地区传统渔业的现代化升级提供参考。
 
-\noindent \textbf{关键词：}平谷渔业；数智化转型；乡村振兴；淡水养殖；智慧渔业
+\noindent \textbf{关键词：}平谷渔业；数智化转型；乡村振兴；淡水养殖；智慧渔业；坑塘长制
 
 \vspace{1cm}
 \begin{center}
@@ -67,9 +68,9 @@
 
 \noindent \textbf{Abstract}
 
-\noindent Under the background of rural revitalization strategy, Pinggu District of Beijing has become an important area for the development of urban modern fishery in the capital due to its unique location and fishery resources. However, traditional freshwater aquaculture is facing multiple challenges including stagnant fish prices, aging workforce, single sales channels, and low intelligence. Based on field research in four fishing villages (Beidingfu, Dongshuangying, Tianjing, and Machangying) from July 14 to 16, 2026, this paper systematically analyzes the current situation and core challenges of Pinggu fishery through semi-structured interviews and participatory observation. Eight structural problems are identified. Based on the successful case of ecological aquaculture in Tianjing Village, digital transformation pathways including smart feeding pilots, unified brand e-commerce, ecological model promotion, and leisure fishery development are proposed.
+\noindent Under the background of rural revitalization strategy, Pinggu District of Beijing has become an important area for the development of urban modern fishery. However, traditional freshwater aquaculture is facing multiple challenges. Based on field research in multiple villages (Beidingfu, Dongshuangying, Tianjing, Machangying, Wanggezhuang, etc.) from July 14 to 17, 2026, this paper systematically analyzes the current situation and core challenges of Pinggu fishery. The research finds that structural problems such as stagnant fish prices, aging workforce, single sales channels, and lagging equipment upgrades are widespread. Meanwhile, Pinggu has established the "Pond Chief System" for grassroots governance, and the pet culture industry transformation in Dongshuangying provides a reference for industrial integration. Based on the successful case of ecological aquaculture in Tianjing Village, digital transformation pathways are proposed.
 
-\noindent \textbf{Keywords:} Pinggu fishery; digital transformation; rural revitalization; freshwater aquaculture; smart fishery
+\noindent \textbf{Keywords:} Pinggu fishery; digital transformation; rural revitalization; freshwater aquaculture; smart fishery; Pond Chief System
 
 \newpage
 \setcounter{page}{1}
@@ -81,7 +82,31 @@
 
 然而，在实际走访中我们发现，平谷区的传统淡水养殖业正面临严峻挑战。养殖户普遍反映"鱼价十年没涨""年轻人不愿意干""投入越来越大、利润越来越薄"。这些声音背后，折射出的是一个小型渔业社区在市场化浪潮中的结构性困境。
 
-本研究团队——北京印刷学院"千人百村"实践队"数智渔韵"课题组，于2026年7月14日至16日，深入平谷区北定福村、东双营镇、天井村、马昌营村四个渔业村庄，开展为期三天的实地调研。本文旨在回答以下问题：平谷传统渔业的现状如何？面临哪些核心困境？数智化技术能否以及如何为其转型升级提供可行路径？
+本研究团队——北京印刷学院"千人百村"实践队"数智渔韵"课题组，于2026年7月14日至17日，深入平谷区多个村庄开展实地调研。调研围绕"智慧渔业""文旅小院""宠物经济"三条主线展开，覆盖北定福村、东双营镇、天井村、马昌营村、王各庄村、王官屯村等点位（图\ref{fig:team_tianjing}、图\ref{fig:team_machangying}、图\ref{fig:team_wanggezhuang}）。本文聚焦"智慧渔业"主线，旨在回答：平谷传统渔业的现状如何？面临哪些核心困境？数智化技术能否以及如何为其转型升级提供可行路径？
+
+\begin{figure}[H]
+\centering
+\begin{minipage}{0.32\textwidth}
+\centering
+\includegraphics[width=\textwidth]{fig15_tianjing_group.jpg}
+\caption{天井村调研合影}
+\label{fig:team_tianjing}
+\end{minipage}
+\hfill
+\begin{minipage}{0.32\textwidth}
+\centering
+\includegraphics[width=\textwidth]{fig16_machangying_group.jpg}
+\caption{马昌营村调研合影}
+\label{fig:team_machangying}
+\end{minipage}
+\hfill
+\begin{minipage}{0.32\textwidth}
+\centering
+\includegraphics[width=\textwidth]{fig23_wanggezhuang_village.jpg}
+\caption{王各庄村调研合影}
+\label{fig:team_wanggezhuang}
+\end{minipage}
+\end{figure}
 
 \section{调研方法与样本概况}
 
@@ -89,33 +114,36 @@
 
 本研究采用质性研究方法，综合运用以下三种数据收集手段：
 
-（1）\textbf{半结构化访谈}。对四个村庄的养殖户进行一对一深度访谈，访谈内容涵盖养殖规模、品种结构、成本构成、销售渠道、设备使用、水质管理、政府政策、发展规划等维度。每位受访者访谈时长20--40分钟。
+（1）\textbf{半结构化访谈}。对各村庄的养殖户进行一对一深度访谈，访谈内容涵盖养殖规模、品种结构、成本构成、销售渠道、设备使用、水质管理、政府政策、发展规划等维度。每位受访者访谈时长20--40分钟。
 
-（2）\textbf{参与式观察}。深入鱼塘现场，观察增氧机、防鸟网、渔船、浮台、控制箱等生产设备的实际使用情况，记录养殖户的日常操作流程。
+（2）\textbf{参与式观察}。深入鱼塘现场，观察增氧机、防鸟网、渔船、浮台、控制箱等生产设备的实际使用情况（图\ref{fig:boat_aerator}），记录坑塘长责任牌等基层治理设施（图\ref{fig:pond_sign}、图\ref{fig:wanggezhuang_sign}），以及养殖户的日常操作流程。
 
-（3）\textbf{影像记录}。使用相机和手机拍摄现场照片，记录鱼塘环境、设备状况、养殖户工作场景等视觉素材。
+（3）\textbf{影像记录}。使用相机和手机拍摄现场照片，累计获取各类调研素材100余张，涵盖鱼塘环境、设备状况、养殖户工作场景、村委对接、产业设施等。
 
 \subsection{样本概况}
 
-四个村庄的基本情况如表\ref{tab:villages}所示。
+本次调研涉及六个村庄/社区，其中以渔业为主导的村庄基本情况如表\ref{tab:villages}所示。
 
 \begin{table}[H]
 \centering
-\caption{调研村庄基本情况}
+\caption{调研村庄基本情况（渔业主线）}
 \label{tab:villages}
-\begin{tabular}{lcccc}
+\begin{tabular}{lccccc}
 \toprule
-\textbf{项目} & \textbf{北定福村} & \textbf{东双营镇} & \textbf{天井村} & \textbf{马昌营村} \\
+\textbf{项目} & \textbf{北定福村} & \textbf{东双营镇} & \textbf{天井村} & \textbf{马昌营村} & \textbf{王各庄村} \\
 \midrule
-养殖类型 & 个体养殖 & 承包养殖 & 老板+散户 & 规模化整合 \\
-养殖规模 & 中小型 & 250亩 & 中小型 & 16--17个塘 \\
-主要品种 & 鲤鱼、草鱼 & 综合鱼种 & 综合鱼种 & 食用鱼+观赏鱼 \\
-亩产（斤） & 约2000 & 约2000 & 约2000 & 约2000 \\
-受访养殖户年龄 & 50+ & 50+ & 50+ & 50+ \\
-年养殖茬数 & 1 & 1 & 1 & 1 \\
+养殖类型 & 个体养殖 & 承包养殖 & 老板+散户 & 规模化整合 & 个体养殖 \\
+养殖规模 & 中小型 & 250亩 & 中小型 & 16--17个塘 & 中小型 \\
+主要品种 & 鲤鱼、草鱼 & 综合鱼种 & 综合鱼种 & 食用+观赏鱼 & 综合鱼种 \\
+亩产（斤） & 约2000 & 约2000 & 约2000 & 约2000 & 约2000 \\
+受访养殖户年龄 & 50+ & 50+ & 50+ & 50+ & 50+ \\
+年养殖茬数 & 1 & 1 & 1 & 1 & 1 \\
+坑塘面积 & 3990m$^2$ & 较大 & 中等 & 较大 & 4563m$^2$ \\
 \bottomrule
 \end{tabular}
 \end{table}
+
+注：坑塘面积数据来源于各村的"坑塘长制"责任牌（图\ref{fig:pond_sign}、图\ref{fig:wanggezhuang_sign}）。
 
 \begin{figure}[H]
 \centering
@@ -124,29 +152,55 @@
 \label{fig:pond_panorama}
 \end{figure}
 
+\begin{figure}[H]
+\centering
+\begin{minipage}{0.48\textwidth}
+\centering
+\includegraphics[width=\textwidth]{fig13_pond_sign.jpg}
+\caption{北定福村坑塘长责任牌（面积3990m$^2$）}
+\label{fig:pond_sign}
+\end{minipage}
+\hfill
+\begin{minipage}{0.48\textwidth}
+\centering
+\includegraphics[width=\textwidth]{fig20_wanggezhuang_sign.jpg}
+\caption{王各庄村坑塘长责任牌（面积4563m$^2$）}
+\label{fig:wanggezhuang_sign}
+\end{minipage}
+\end{figure}
+
+值得注意的是，平谷区已全面推行"坑塘长制"管理制度。调研发现，每个鱼塘均设有"坑塘长"责任牌，标注面积、责任人姓名及电话、编号，并明确"控源截污、内源治理"等管护措施和"六无"管护目标。部分责任牌还贴有"北京农安通"二维码标签（图\ref{fig:wanggezhuang_sign}），实现了信息化管理手段的初步接入。这一制度为后续数智化升级提供了基层治理层面的组织基础。
+
 \section{平谷渔业现状与核心发现}
 
-通过对四个村庄的调研数据交叉比对，我们提炼出以下八个核心发现。
+通过对多个村庄的调研数据交叉比对，我们提炼出以下核心发现。
 
 \subsection{发现一：鱼价十年停滞，养殖户缺乏定价权}
 
-四个村庄的养殖户给出的鱼价高度一致：每斤7\textasciitilde9元，且这一价格与十年前基本持平。而同期，饲料价格、电费、药品价格和人工成本均大幅上涨。
+各村庄的养殖户给出的鱼价高度一致：每斤7\textasciitilde9元，且这一价格与十年前基本持平。而同期，饲料价格、电费、药品价格和人工成本均大幅上涨。
 
-鱼价停滞的根本原因在于养殖户没有定价权。四个村庄的销售模式几乎完全相同：养殖户$\to$鱼贩子$\to$市场/网络。鱼贩子以7\textasciitilde9元/斤的价格收购后，在市场上以15\textasciitilde25元/斤的价格销售。马昌营村的养殖户老侯特别提到，"专业贩子收了以后挂网上卖"——贩子们在用养殖户不会使用的电商平台，赚取着养殖户赚不到的差价。
+鱼价停滞的根本原因在于养殖户没有定价权。各村庄的销售模式几乎完全相同：养殖户$\to$鱼贩子$\to$市场/网络。鱼贩子以7\textasciitilde9元/斤的价格收购后，在市场上以15\textasciitilde25元/斤的价格销售。马昌营村的养殖户老侯特别提到，"专业贩子收了以后挂网上卖"——贩子们在用养殖户不会使用的电商平台，赚取着养殖户赚不到的差价。
 
 \subsection{发现二：从业人员全面老龄化，后继无人}
 
-四个村庄的受访养殖户几乎全部在50岁以上。东双营镇的老赵、马昌营村的老侯，他们的子女均在外打工，过年才回一趟。没有人接班，是这个行业最根本的危机。
+各村庄的受访养殖户几乎全部在50岁以上。东双营镇的老赵、马昌营村的老侯，他们的子女均在外打工，过年才回一趟（图\ref{fig:village_road}）。没有人接班，是这个行业最根本的危机。
 
 年轻人外流的深层原因并非单一的"嫌苦"，而是收入不稳定、劳动强度大、社会地位低、缺乏发展空间的综合结果。同样的劳动付出，在城市能获得更高的回报。
 
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.75\textwidth]{fig7_village_road.jpg}
+\caption{北定福村村道，调研队员与村民交流}
+\label{fig:village_road}
+\end{figure}
+
 \subsection{发现三：销售渠道单一，利润被中间环节截取}
 
-如表\ref{tab:sales}所示，四个村庄的销售渠道高度同质化，均以鱼贩子收购为主。
+如表\ref{tab:sales}所示，各村庄的销售渠道高度同质化，均以鱼贩子收购为主。
 
 \begin{table}[H]
 \centering
-\caption{四个村庄销售渠道对比}
+\caption{各村庄销售渠道对比}
 \label{tab:sales}
 \begin{tabular}{ll}
 \toprule
@@ -156,6 +210,7 @@
 东双营镇 & 鱼贩子收购，无网络销售 \\
 天井村 & 老板收货 + 微信本地销售（部分） \\
 马昌营村 & 专业贩子收购，贩子挂网销售 \\
+王各庄村 & 鱼贩子收购 \\
 \bottomrule
 \end{tabular}
 \end{table}
@@ -164,22 +219,48 @@
 
 \subsection{发现四：设备更新滞后，智能化程度极低}
 
-增氧机是四个村庄唯一的"标配"设备，但状态参差不齐。马昌营村老侯的增氧机已使用六七年，早年有政府补贴，如今纯自费维护。自动投喂机单价3000\textasciitilde4000元，受访养殖户无人购置。水质检测靠试纸，鱼病靠肉眼观察，严重时才找"鱼大夫"。
+增氧机是各村庄唯一的"标配"设备（图\ref{fig:wanggezhuang_aerator}），但状态参差不齐。马昌营村老侯的增氧机已使用六七年，早年有政府补贴，如今纯自费维护。自动投喂机单价3000\textasciitilde4000元，受访养殖户无人购置。水质检测靠试纸，鱼病靠肉眼观察，严重时才找"鱼大夫"。
 
 东双营镇的老赵是唯一添置了部分智能设备的养殖户，并尝试了高价鱼种。但他的投入超过200万元，"纯利不高"四个字道出了投入与回报的不匹配。
 
 \begin{figure}[H]
 \centering
-\includegraphics[width=0.85\textwidth]{fig2_boat_aerator.jpg}
-\caption{鱼塘边的增氧机与简易木船，设备以基础型为主}
+\begin{minipage}{0.48\textwidth}
+\centering
+\includegraphics[width=\textwidth]{fig2_boat_aerator.jpg}
+\caption{鱼塘边的增氧机与简易木船}
 \label{fig:boat_aerator}
+\end{minipage}
+\hfill
+\begin{minipage}{0.48\textwidth}
+\centering
+\includegraphics[width=\textwidth]{fig19_wanggezhuang_aerator.jpg}
+\caption{王各庄村鱼塘，增氧机运转中}
+\label{fig:wanggezhuang_aerator}
+\end{minipage}
+\end{figure}
+
+值得注意的是，在王各庄村调研中，我们发现了废弃的生产设施（图\ref{fig:abandoned}），包括老旧木板栈桥、锈蚀的金属管护栏和储罐，说明部分养殖点曾经历过设备投入但未能持续运营。这一现象印证了"投入大、回报慢"导致设备闲置的现实困境。
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.7\textwidth]{fig21_abandoned_facility.jpg}
+\caption{王各庄村鱼塘边的废弃生产设施}
+\label{fig:abandoned}
 \end{figure}
 
 \subsection{发现五：水质管理全凭经验，缺乏标准化方案}
 
-"水质不好，一下雨就要调。"老侯的原话反映了当前水质管理的非标准化现状。天井村是唯一例外——该村的养殖户使用光合细菌调节水质，尾水排入藕池循环利用，形成了"鱼\textendash 藕"生态闭环。这一方法成本低、操作简单、效果显著，但其他三个村庄均未采用。
+"水质不好，一下雨就要调。"老侯的原话反映了当前水质管理的非标准化现状。天井村是唯一例外——该村的养殖户使用光合细菌调节水质，尾水排入藕池循环利用，形成了"鱼\textendash 藕"生态闭环。这一方法成本低、操作简单、效果显著，但其他村庄均未采用。
 
-地下水质量一般、几乎不换水（东双营镇）、下雨后水质突变、渗水严重（天井村）等问题普遍存在。没有村庄具备系统的水质监测方案。
+在7月15日的调研中，我们拍摄到了水体富营养化的直观证据（图\ref{fig:algae}）：部分鱼塘水面覆盖密集藻类，呈斑驳绿色调，岸边散落塑料垃圾。地下水质量一般、几乎不换水（东双营镇）、下雨后水质突变、渗水严重（天井村）等问题普遍存在。没有村庄具备系统的水质监测方案。
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.75\textwidth]{fig17_algae_closeup.jpg}
+\caption{鱼塘水体富营养化，水面藻类密集}
+\label{fig:algae}
+\end{figure}
 
 \subsection{发现六：北方养鱼的季节性困境}
 
@@ -188,6 +269,15 @@
 \subsection{发现七：规划与落地之间存在鸿沟}
 
 东双营镇35亩建设用地的旅游规划于2020年提出，构想是让城里人来钓鱼、吃鱼、体验渔村生活。五年过去，规划仍处于"不了了之"状态。资金不足、建设用地审批困难、缺乏运营经验、宣传渠道缺失等多重障碍叠加，导致"有想法、无落地"的困局。
+
+然而，东双营镇在宠物文化产业方面的转型探索值得关注。该镇已建设宠物文化产业园（图\ref{fig:pet_park}），尝试从传统养殖向宠物经济转型，这一路径虽然与渔业方向不同，但其"产业转型"的思路对渔业升级具有参考价值——说明平谷乡镇层面已具备产业转型的意识和尝试。
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.65\textwidth]{fig14_pet_park.jpg}
+\caption{东双营镇宠物文化产业园}
+\label{fig:pet_park}
+\end{figure}
 
 \subsection{发现八：养殖户愿意改变，但缺乏路径指导}
 
@@ -202,7 +292,7 @@
 
 \section{典型案例：天井村的生态养殖实践}
 
-在四个村庄中，天井村的养殖模式最具参考价值，值得单独分析。
+在调研的各村庄中，天井村的养殖模式最具参考价值，值得单独分析。
 
 \subsection{技术方案}
 
@@ -252,13 +342,15 @@
 
 \section{讨论与反思}
 
-本研究存在以下局限：一是调研时间较短（三天），且主要依赖访谈数据，缺乏量化问卷的支撑；二是样本量有限（四个村庄、十余位养殖户），结论的推广性需进一步验证；三是受限于调研团队的专业背景（印刷学院而非水产院校），对水质、鱼病等技术问题的分析深度不足。
+本研究存在以下局限：一是调研仍在进行中，本文基于阶段性成果撰写，后续调研数据将进一步完善分析；二是主要依赖访谈数据，缺乏量化问卷的支撑；三是受限于调研团队的专业背景（印刷学院而非水产院校），对水质、鱼病等技术问题的分析深度不足。
 
-尽管如此，本研究仍有其独特价值。作为一支以"数智传播"见长的团队，我们关注的不只是渔业技术问题，更是\textbf{信息鸿沟}和\textbf{数字鸿沟}如何制约传统产业升级的问题。养殖户说"那敢情好"的时候，我们看到的是一种真实的需求——他们需要的不是高科技本身，而是有人帮他们迈出从"不知道怎么变"到"知道怎么变"的第一步。
+尽管如此，本研究仍有其独特价值。作为一支以"数智传播"见长的团队，我们关注的不只是渔业技术问题，更是\textbf{信息鸿沟}和\textbf{数字鸿沟}如何制约传统产业升级的问题。平谷区推行的"坑塘长制"和"北京农安通"信息化管理，体现了基层治理的制度化努力，但与真正意义上的"智慧渔业"仍有较大差距。养殖户说"那敢情好"的时候，我们看到的是一种真实的需求——他们需要的不是高科技本身，而是有人帮他们迈出从"不知道怎么变"到"知道怎么变"的第一步。
 
 \section{结论}
 
-本文通过对平谷区四个渔业村庄的实地调研，揭示了传统淡水养殖业面临的八大结构性困境：鱼价停滞、人才断档、渠道单一、设备落后、水质粗放、季节受限、规划搁浅、路径缺失。天井村的生态养殖实践证明，低成本、可复制的绿色转型路径是存在的。在此基础上，本文提出的智能投喂试点、统一品牌电商、生态模式推广、休闲渔业开发四条路径，构成了平谷渔业数智化转型的初步框架。
+本文通过对平谷区多个渔业村庄的阶段性实地调研，揭示了传统淡水养殖业面临的八大结构性困境：鱼价停滞、人才断档、渠道单一、设备落后、水质粗放、季节受限、规划搁浅、路径缺失。天井村的生态养殖实践证明，低成本、可复制的绿色转型路径是存在的；平谷区"坑塘长制"的推行也为数智化升级提供了组织基础。在此基础上，本文提出的智能投喂试点、统一品牌电商、生态模式推广、休闲渔业开发四条路径，构成了平谷渔业数智化转型的初步框架。
+
+后续调研将继续深化数据收集，重点补充水质检测数据、经济成本核算和养殖户满意度调查，以期为平谷传统渔业的现代化升级提供更加扎实的实证支撑。
 
 我们相信，每一尾鱼都值得一条更好的出路。这不仅是一个经济学命题，更是一个关于信息公平与数字包容的社会命题。
 
