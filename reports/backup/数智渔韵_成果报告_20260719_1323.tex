@@ -1,0 +1,767 @@
+\documentclass[12pt,a4paper]{article}
+
+% ==================== 基础包 ====================
+\usepackage[UTF8]{ctex}
+\usepackage{geometry}
+\geometry{top=2.5cm,bottom=2.5cm,left=2.8cm,right=2.8cm}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{longtable}
+\usepackage{array}
+\usepackage{multirow}
+\usepackage{enumitem}
+\usepackage{xcolor}
+\usepackage{titlesec}
+\usepackage{fancyhdr}
+\usepackage{lastpage}
+\usepackage{hyperref}
+\usepackage{float}
+\usepackage{caption}
+\usepackage{subcaption}
+
+% ==================== 页面设置 ====================
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[C]{\small 北京印刷学院·"千人百村"实习实践活动成果报告}
+\fancyfoot[C]{\thepage}
+\renewcommand{\headrulewidth}{0.4pt}
+
+% ==================== 标题格式 ====================
+\titleformat{\section}{\Large\bfseries\centering}{\chinese{section}、}{0em}{}
+\titleformat{\subsection}{\large\bfseries}{（\chinese{subsection}）}{0.5em}{}
+\titleformat{\subsubsection}{\normalsize\bfseries}{\arabic{subsubsection}.}{0.5em}{}
+
+% ==================== 颜色定义 ====================
+\definecolor{titleblue}{RGB}{0,82,147}
+\definecolor{accentgreen}{RGB}{34,139,34}
+\definecolor{warnred}{RGB}{200,50,50}
+
+% ==================== 文档开始 ====================
+\begin{document}
+
+% ==================== 封面 ====================
+\begin{titlepage}
+\begin{center}
+\vspace*{2cm}
+{\small 北京印刷学院·"千人百村"实习实践活动成果报告}
+
+\vspace{3cm}
+
+{\Huge\bfseries\color{titleblue} "千人百村"大学生实习实践活动}\\[0.8cm]
+{\Huge\bfseries\color{titleblue} 成\quad 果\quad 报\quad 告}
+
+\vspace{3cm}
+
+\begin{tabular}{rl}
+\textbf{学\qquad 校：} & 北京印刷学院 \\[0.5em]
+\textbf{专\qquad 业：} & 智能科学与技术 \\[0.5em]
+\textbf{实践小队：} & "数智渔韵"实践队 \\[0.5em]
+\textbf{实践地点：} & 北京市平谷区马昌营镇 \\[0.5em]
+\end{tabular}
+
+\vspace{2cm}
+
+\begin{tabular}{rl}
+\textbf{指导教师：} & 蒋祎 \\[0.5em]
+\textbf{课题组成员：} & 石宇含\quad 范潇麟\quad 高靖鲲 \\[0.5em]
+\end{tabular}
+
+\vspace{2cm}
+
+{\large 2026年7月}
+
+\end{center}
+\end{titlepage}
+
+% ==================== 目录 ====================
+\newpage
+\tableofcontents
+\newpage
+
+% ==================== 一、活动背景 ====================
+\section{活动背景}
+
+"民族要复兴，乡村必振兴。"在全面推进乡村振兴战略的进程中，首都高校"千人百村"暑期社会实践活动号召广大青年学子深入京郊大地，以专业所学服务乡村发展。北京印刷学院积极响应号召，智能科学与技术专业石宇含、范潇麟、高靖鲲三位同学在指导教师蒋祎的带领下，组建"数智渔韵"实践队，于2026年7月14日至19日赴北京市平谷区马昌营镇开展实地调研与实践活动。
+
+平谷区作为首都生态涵养区，渔业养殖面积达2000余亩，是北京地区重要的淡水鱼供应基地。马昌营镇下辖多个以渔业为主要产业的传统渔村，同时也在积极发展宠物文化产业等新兴产业。本次实践聚焦传统渔业现状调研，同时了解镇域内特色产业生态，探索数智化赋能传统产业转型的可能路径。
+
+% ==================== 二、团队简介 ====================
+\section{团队简介}
+
+"数智渔韵"实践队由北京印刷学院智能科学与技术专业的3名大二本科生和1名指导教师组成。团队名称寓意"以数智技术赋能传统渔业"，体现了将人工智能、数据分析等专业知识应用于乡村振兴实践的理念。
+
+指导教师蒋祎负责整体方案设计与学术指导。石宇含、范潇麟、高靖鲲三位同学分别承担实地调研、影像拍摄与记录、数据整理与报告撰写等工作。团队成员具备智能科学与技术专业背景，对人工智能、数据分析、数字化工具应用有较为系统的学习基础，能够在调研过程中以技术视角审视传统产业痛点，提出数智化升级的建议方案。
+
+\begin{figure}[H]
+\centering
+\fbox{\parbox{0.8\textwidth}{\centering\vspace{2cm}【图1 实践队在天井村调研合影】\vspace{2cm}}}
+\caption{实践队在天井村调研合影}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\fbox{\parbox{0.8\textwidth}{\centering\vspace{2cm}【图2 实践队在马昌营村调研合影】\vspace{2cm}}}
+\caption{实践队在马昌营村调研合影}
+\end{figure}
+
+% ==================== 三、渔村实地调研 ====================
+\section{渔村实地调研}
+
+实践队于2026年7月14日至19日，先后赴北定福村、东双营村、天井村、马昌营村、王各庄村、后芮营村（芮朝利养殖场）、西海子村七个点位开展渔业调研。以下按村庄/点位分节记录调研情况。
+
+% ---------- 3.1 北定福村 ----------
+\subsection{北定福村渔业调研}
+
+北定福村是实践队调研的第一站。该村鱼塘呈现"集中连片、各户承包"的特征，多个鱼塘紧密相连，由不同养殖户分别承包经营。
+
+\subsubsection{养殖模式与规模}
+
+该村鱼塘为集中连片布局，各户分别承包经营。相比散养村，这一模式已具备了"抱团降成本"的雏形，在组织形式上有一定基础。
+
+\subsubsection{经营现状与痛点}
+
+养殖户反映的核心问题包括：
+\begin{itemize}[leftmargin=2em]
+    \item \textbf{鱼价不稳定}：近年来鱼价波动较大，养殖户收入难以保障；
+    \item \textbf{成本持续增加}：饲料、电费、药品和人工成本均大幅上涨；
+    \item \textbf{利润空间压缩}：鱼价与十年前基本持平，但成本逐年攀升，利润空间被不断压缩。
+\end{itemize}
+
+\subsubsection{水质与环境观察}
+
+调研中发现鱼塘存在明显的水质问题：
+\begin{itemize}[leftmargin=2em]
+    \item 鱼塘水面出现富营养化现象，藻类密集覆盖水面；
+    \item 增氧机为唯一标配设备，智能化程度较低。
+\end{itemize}
+
+\begin{figure}[H]
+\centering
+\fbox{\parbox{0.8\textwidth}{\centering\vspace{1.5cm}【图3 北定福村调研现场】\vspace{1.5cm}}}
+\caption{北定福村调研现场}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\fbox{\parbox{0.8\textwidth}{\centering\vspace{1.5cm}【图4 鱼塘增氧机作业】\vspace{1.5cm}}}
+\caption{鱼塘增氧机作业}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\fbox{\parbox{0.8\textwidth}{\centering\vspace{1.5cm}【图5 鱼塘水面富营养化现状】\vspace{1.5cm}}}
+\caption{鱼塘水面富营养化现状}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\fbox{\parbox{0.8\textwidth}{\centering\vspace{1.5cm}【图6 富营养化导致藻类密集覆盖水面】\vspace{1.5cm}}}
+\caption{富营养化导致藻类密集覆盖水面}
+\end{figure}
+
+% ---------- 3.2 东双营村 ----------
+\subsection{东双营村渔业调研}
+
+东双营村主要产业已转向宠物文化产业，但仍保留约250亩鱼塘（7块水域），由村干部带头建设于山区。
+
+\subsubsection{养殖模式与规模}
+
+\begin{itemize}[leftmargin=2em]
+    \item 鱼塘面积约250亩，共7块水域；
+    \item 由村干部带头建设，位于山区；
+    \item 依赖地下水，几乎不换水。
+\end{itemize}
+
+\subsubsection{智能化探索}
+
+养殖户老赵为提升养殖品质，添置了智能设备，总投入超过200万元。但调研发现"纯利不高"，高投入并未带来相应的高回报。
+
+\subsubsection{销售渠道}
+
+销售完全依赖鱼贩子收购，无网络销售渠道。鱼价约7--9元/斤，价格不稳定。
+
+\subsubsection{养殖管理}
+
+\begin{itemize}[leftmargin=2em]
+    \item 受雨水影响大，未形成系统的养殖体系；
+    \item 7--8月份需勤溜达、高要求管理；
+    \item 鱼病以烂鳃为主；
+    \item 养鱼人员减少，年轻人不愿意从事该行业。
+\end{itemize}
+
+\begin{figure}[H]
+\centering
+\fbox{\parbox{0.8\textwidth}{\centering\vspace{1.5cm}【图7 东双营村鱼塘】\vspace{1.5cm}}}
+\caption{东双营村鱼塘}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\fbox{\parbox{0.8\textwidth}{\centering\vspace{1.5cm}【图8 东双营村养殖水域】\vspace{1.5cm}}}
+\caption{东双营村养殖水域}
+\end{figure}
+
+% ---------- 3.3 天井村 ----------
+\subsection{天井村渔业调研}
+
+天井村是调研村庄中生态模式最为先进的村庄，其水质管理经验具有重要的推广价值。
+
+\subsubsection{养殖模式与规模}
+
+\begin{itemize}[leftmargin=2em]
+    \item 全村有五六户养殖户，共百十亩鱼塘；
+    \item 分散经营，无闲置塘；
+    \item 个人承包模式。
+\end{itemize}
+
+\subsubsection{水质管理亮点}
+
+天井村最大的亮点在于水质管理，形成了独特的"鱼---藕"生态闭环：
+\begin{itemize}[leftmargin=2em]
+    \item \textbf{光合细菌调水}：使用光合细菌调节水质，增加水体含氧量；
+    \item \textbf{尾水循环利用}：尾水排入藕池循环利用，形成生态闭环；
+    \item \textbf{藕塘净化}：村里有两个专门的藕塘，在净化功能之外额外产出莲藕。
+\end{itemize}
+
+\subsubsection{销售渠道创新}
+
+天井村是调研村庄中唯一有微信本地销售渠道的村庄。部分养殖户通过"老板收货+微信导鱼"的双渠道模式获得更高收益。
+
+\subsubsection{其他观察}
+
+\begin{itemize}[leftmargin=2em]
+    \item 草鱼、鲤鱼亩产约10000斤，产量较高；
+    \item 鱼苗来源多样，孵化技术依赖经验，成活率看眼力；
+    \item 有环保要求，不许排污地下水；
+    \item 政府无补贴，自负盈亏；
+    \item 鱼病有腮病、蛆虫等问题，需请鱼大夫或去农科院；
+    \item 突然性断电需自备发电机；
+    \item 有手机联网等高科技手段辅助管理。
+\end{itemize}
+
+\begin{figure}[H]
+\centering
+\fbox{\parbox{0.8\textwidth}{\centering\vspace{1.5cm}【图13 天井村人大代表联络站】\vspace{1.5cm}}}
+\caption{天井村人大代表联络站}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\fbox{\parbox{0.8\textwidth}{\centering\vspace{1.5cm}【图14 天井村鱼塘渔船作业】\vspace{1.5cm}}}
+\caption{天井村鱼塘渔船作业}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\fbox{\parbox{0.8\textwidth}{\centering\vspace{1.5cm}【图15 实践队员与养殖户在塘边交流】\vspace{1.5cm}}}
+\caption{实践队员与养殖户在塘边交流}
+\end{figure}
+
+% ---------- 3.4 马昌营村 ----------
+\subsection{马昌营村渔业调研}
+
+马昌营村是镇中心村，鱼塘数量最多，是调研中唯一"全品种覆盖"的村庄。
+
+\subsubsection{养殖模式与规模}
+
+\begin{itemize}[leftmargin=2em]
+    \item 鱼塘数量最多，共十六七个；
+    \item 原有七户散户养殖，部分已不再经营，鱼塘正逐步集中；
+    \item 同时养殖食用鱼和观赏鱼，为调研中唯一"全品种覆盖"的村庄；
+    \item 租赁土地经营。
+\end{itemize}
+
+\subsubsection{经营困境}
+
+养殖户老侯详细描述了经营困境：
+\begin{itemize}[leftmargin=2em]
+    \item \textbf{销售期短}：一年只能养一茬，冬天水结冰卖不掉，有效销售期仅半年但成本全年持续；
+    \item \textbf{设备老旧}：增氧机已使用六七年，早年有政府补贴，如今纯自费维护；
+    \item \textbf{智能设备缺失}：自动投喂机单价3000至4000元，"太贵了"没有购置；
+    \item \textbf{投喂方式原始}：目前为手动撒药、手动投喂。
+\end{itemize}
+
+\subsubsection{销售痛点}
+
+"专业贩子来收，贩子往网上挂，大小都收。"贩子以7至9元/斤收购后在网上以15至25元销售。当被问及是否愿意网上卖鱼时，老侯回答："那敢情好。"
+
+\subsubsection{水质与病害}
+
+\begin{itemize}[leftmargin=2em]
+    \item 水质不好，一下雨需要调水质；
+    \item 试纸测水质，养殖户自行判断；
+    \item 鱼苗自己孵化+购买，成活率约90\%；
+    \item 鱼病以鱼腮病、吃多为主；
+    \item 药品由公司供应，大病少、小病多。
+\end{itemize}
+
+\begin{figure}[H]
+\centering
+\fbox{\parbox{0.8\textwidth}{\centering\vspace{1.5cm}【图16 马昌营村鱼塘水面泡沫（水质问题直观体现）】\vspace{1.5cm}}}
+\caption{马昌营村鱼塘水面泡沫（水质问题直观体现）}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\fbox{\parbox{0.8\textwidth}{\centering\vspace{1.5cm}【图17 马昌营村养殖场全景（增氧机、防鸟网、作业船）】\vspace{1.5cm}}}
+\caption{马昌营村养殖场全景（增氧机、防鸟网、作业船）}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\fbox{\parbox{0.8\textwidth}{\centering\vspace{1.5cm}【图18 增氧机运转现场】\vspace{1.5cm}}}
+\caption{增氧机运转现场}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\fbox{\parbox{0.8\textwidth}{\centering\vspace{1.5cm}【图19 养殖户修补渔网】\vspace{1.5cm}}}
+\caption{养殖户修补渔网}
+\end{figure}
+
+% ---------- 3.5 王各庄村 ----------
+\subsection{王各庄村渔业调研}
+
+王各庄村是第二大村，历史悠久，面积2.49平方公里，约500户。鱼塘总面积约400亩，分散经营，全部养殖食用鱼，渔业为非主营产业。
+
+\subsubsection{养殖模式与规模}
+
+\begin{itemize}[leftmargin=2em]
+    \item 鱼塘总面积约400亩，分散经营；
+    \item 全部养殖食用鱼，无观赏鱼；
+    \item 渔业为非主营产业；
+    \item 部分闲置鱼塘已改种莲藕，尝试生态转型。
+\end{itemize}
+
+\subsubsection{第一位受访养殖户}
+
+\begin{itemize}[leftmargin=2em]
+    \item \textbf{经营困境}："最近亏钱，市场不行""销量从2万变5000""养鱼不挣钱，导鱼的挣钱"；
+    \item \textbf{鱼苗问题}：鱼苗从外地购买甚至"坐飞机来"，成活率最高仅70\%；
+    \item \textbf{智能设备}：使用手机"塘管家"APP管理水质，年费100多元，但"岁数大的不会用"；
+    \item \textbf{尾水管理}：尾水禁止外排，排入地里；
+    \item \textbf{用药控制}：用药控制严格；
+    \item \textbf{鱼病}：裂头病；
+    \item \textbf{饲料成本}：约1万元/吨；
+    \item \textbf{年纯收入}：仅5至6万元。
+\end{itemize}
+
+\subsubsection{第二位受访养殖户}
+
+\begin{itemize}[leftmargin=2em]
+    \item 20亩，2个池，食用鱼（草鱼）；
+    \item 一年一茬，6万斤产量；
+    \item 20多年养鱼经验；
+    \item 鱼苗自己培养+外地购买，成活率草鱼最高70\%；
+    \item 夏季鱼病频繁，烂鳃为主；
+    \item 只有增氧机，无其他智能设备；
+    \item 有人帮忙测水质；
+    \item 用多余水果做鱼饵；
+    \item 年纯收入5--6万元。
+\end{itemize}
+
+\begin{figure}[H]
+\centering
+\fbox{\parbox{0.8\textwidth}{\centering\vspace{1.5cm}【图28 王各庄村鱼塘】\vspace{1.5cm}}}
+\caption{王各庄村鱼塘}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\fbox{\parbox{0.8\textwidth}{\centering\vspace{1.5cm}【图29 王各庄村鱼塘增氧机运转】\vspace{1.5cm}}}
+\caption{王各庄村鱼塘增氧机运转}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\fbox{\parbox{0.8\textwidth}{\centering\vspace{1.5cm}【图30 王各庄村养殖区】\vspace{1.5cm}}}
+\caption{王各庄村养殖区}
+\end{figure}
+
+% ---------- 3.6 后芮营村（芮朝利养殖场） ----------
+\subsection{后芮营村芮朝利养殖场调研}
+
+后芮营村芮朝利养殖场是调研中智能化程度最高、经营模式最先进的点位，代表了马昌营镇渔业转型升级的方向。
+
+\subsubsection{养殖模式与规模}
+
+\begin{itemize}[leftmargin=2em]
+    \item \textbf{鱼菜共生系统}：采用"鱼菜共生"循环模式，水体过剩问题通过种植水稻、荷花等植物实现环保处理；
+    \item \textbf{规模}：总共50亩，水面38.8亩；
+    \item \textbf{品种}：以鲈鱼为主（批发价18--19元/斤），兼有其他品种；
+    \item \textbf{产量}：年产约100吨；
+    \item \textbf{利润}：年利润20--30万元（受鱼病影响波动大）。
+\end{itemize}
+
+\subsubsection{智能化设备配置}
+
+该养殖场是调研中设备最齐全的点位：
+\begin{itemize}[leftmargin=2em]
+    \item \textbf{手机远程管理}：通过"塘管家"APP定时管理增氧机，实现人不用巡塘；
+    \item \textbf{自动投饲机}：已配备，减少人工投喂成本；
+    \item \textbf{拉网机}：已配备，提高捕捞效率；
+    \item \textbf{催水设备}：配备催水鱼设备；
+    \item \textbf{大棚养殖}：建有养殖大棚，政府补贴100--200万元；
+    \item \textbf{自备发电机}：每个鱼塘配备4台发电机，应对突发断电。
+\end{itemize}
+
+\subsubsection{经营特点}
+
+\begin{itemize}[leftmargin=2em]
+    \item \textbf{反季节养殖}：一般养鱼时间为4--10月，该场通过大棚实现全年养殖，延长养殖周期；
+    \item \textbf{鱼苗自繁}：苗期自己培养鱼苗，增加收入，但存在市场滞后性；
+    \item \textbf{鱼病防治}：自己帮人治鱼病，半义诊性质，一般只收药钱；
+    \item \textbf{技术输出}：愿意给周边养殖户做技术输出，带动区域发展；
+    \item \textbf{饲料成本}：饲料占成本大头，饵料系数与鱼品类有关（约5500元/吨）。
+\end{itemize}
+
+\subsubsection{发展瓶颈}
+
+\begin{itemize}[leftmargin=2em]
+    \item \textbf{高端设备不稳定}：市面上的拉网机、撒料船和风投等高端设备不太稳定；
+    \item \textbf{散户难以复制}：大棚模式不适合散户，需要较大资金投入；
+    \item \textbf{价格风险}：鲈鱼价格看市场，有时仅14元/斤，价格过低时亏损严重；
+    \item \textbf{AI/机器人需求}：场主主动询问"有考虑AI、机器人之类的引入吗"，表达了对智能化升级的强烈需求。
+\end{itemize}
+
+\subsubsection{对招商与信息化的态度}
+
+场主表示目前不是特别需要招商，但愿意继续完善信息化展示网站规划，愿意提供更多信息。这一态度说明先进养殖户对数字化工具持开放态度，但需要更贴合实际需求的产品。
+
+\begin{figure}[H]
+\centering
+\fbox{\parbox{0.8\textwidth}{\centering\vspace{1.5cm}【图35 后芮营村芮朝利养殖场大棚外景】\vspace{1.5cm}}}
+\caption{后芮营村芮朝利养殖场大棚外景}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\fbox{\parbox{0.8\textwidth}{\centering\vspace{1.5cm}【图36 鱼菜共生系统展示】\vspace{1.5cm}}}
+\caption{鱼菜共生系统展示}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\fbox{\parbox{0.8\textwidth}{\centering\vspace{1.5cm}【图37 智能化养殖设备】\vspace{1.5cm}}}
+\caption{智能化养殖设备}
+\end{figure}
+
+% ---------- 3.7 西海子村 ----------
+\subsection{西海子村渔业调研}
+
+西海子村是调研中养殖品种最丰富的村庄，以观赏鱼养殖为特色，但同样面临严重的经营困境。
+
+\subsubsection{养殖模式与规模}
+
+\begin{itemize}[leftmargin=2em]
+    \item \textbf{池塘数量}：8个池塘，总面积55亩，实际养殖面积30多亩；
+    \item \textbf{品种丰富}：黄金鲤（100多万条）、金鱼（1万多条）、锦鲤（产量不太高）等；
+    \item \textbf{合伙经营}：观赏鱼为合伙经营；
+    \item \textbf{产量}：年产5--6万斤；
+    \item \textbf{独立养殖}：有合作社"源来"，但各户独立经营为主。
+\end{itemize}
+
+\subsubsection{经营困境}
+
+\begin{itemize}[leftmargin=2em]
+    \item \textbf{淡水鱼赔钱}："养鱼不咋挣钱"，10个养殖户8个亏损；
+    \item \textbf{饲料成本极高}：饲料年投入30--50万元，单价3元/斤，且受时段影响；
+    \item \textbf{电费高昂}：一天700多度电，电费成本巨大；
+    \item \textbf{价格不稳定}：养殖业价格整体不稳定；
+    \item \textbf{运输繁琐}：网络销售渠道不搞了，一般只给市场供货。
+\end{itemize}
+
+\subsubsection{智能化探索}
+
+\begin{itemize}[leftmargin=2em]
+    \item \textbf{现有设备}：已实现"智能and半智能养殖"，但"设备一般，缺陷较大"；
+    \item \textbf{水质检测}：使用水质试剂自行检测；
+    \item \textbf{鱼病防治}：鱼病主要是鱼鳃病，村里没有鱼医，需自己防治、调水；
+    \item \textbf{尾水处理}：尾水排到专门的坑里（坑里有鱼），实现初步循环利用。
+\end{itemize}
+
+\subsubsection{文旅发展意愿}
+
+场主有强烈的文旅发展意愿：
+\begin{itemize}[leftmargin=2em]
+    \item 想要搞"农场一日游"，但没有人牵头；
+    \item 政策障碍：建设用地和文旅用地性质不同，没有配套支持；
+    \item 需要板块合并才能推进文旅项目；
+    \item 观赏鱼随时有人要（秋后至来年开春），适合发展休闲观光。
+\end{itemize}
+
+\subsubsection{风险保障缺失}
+
+\begin{itemize}[leftmargin=2em]
+    \item \textbf{无保险}：养殖一般没保险，风险太高且不可估量；
+    \item \textbf{保费高}：不像种植业一般交费低且保额高；
+    \item \textbf{自然灾害}：有可能形成局部龙卷风，造成经济损伤。
+\end{itemize}
+
+\begin{figure}[H]
+\centering
+\fbox{\parbox{0.8\textwidth}{\centering\vspace{1.5cm}【图38 西海子村观赏鱼养殖池塘】\vspace{1.5cm}}}
+\caption{西海子村观赏鱼养殖池塘}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\fbox{\parbox{0.8\textwidth}{\centering\vspace{1.5cm}【图39 黄金鲤养殖区】\vspace{1.5cm}}}
+\caption{黄金鲤养殖区}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\fbox{\parbox{0.8\textwidth}{\centering\vspace{1.5cm}【图40 西海子村鱼塘全景】\vspace{1.5cm}}}
+\caption{西海子村鱼塘全景}
+\end{figure}
+
+% ==================== 四、渔村调研数据分析 ====================
+\section{渔村调研数据分析}
+
+\subsection{七村/点位渔业调研对比}
+
+通过对七个调研点位的交叉比对，整理调研数据如下：
+
+\begin{table}[H]
+\centering
+\caption{七村/点位渔业调研对比表}
+\small
+\begin{tabular}{>{\centering\arraybackslash}p{1.8cm}|>{\centering\arraybackslash}p{1.5cm}|>{\centering\arraybackslash}p{1.5cm}|>{\centering\arraybackslash}p{1.5cm}|>{\centering\arraybackslash}p{1.5cm}|>{\centering\arraybackslash}p{1.5cm}|>{\centering\arraybackslash}p{1.5cm}|>{\centering\arraybackslash}p{1.5cm}}
+\toprule
+\textbf{项目} & \textbf{北定福村} & \textbf{东双营村} & \textbf{天井村} & \textbf{马昌营村} & \textbf{王各庄村} & \textbf{后芮营} & \textbf{西海子} \\
+\midrule
+养殖模式 & 集中连片各户承包 & 山区村干部带头 & 老板+散户 & 16--17个塘 & 分散非主营 & 鱼菜共生大棚 & 合伙+独立 \\
+\midrule
+规模 & 中小型 & 250亩/7块 & 百十亩 & 最大 & 400亩 & 50亩/38.8水面 & 55亩/8塘 \\
+\midrule
+主要品种 & 鲤鱼、草鱼 & 综合+高价种 & 综合鱼种 & 食用+观赏鱼 & 食用鱼 & 鲈鱼为主 & 黄金鲤、金鱼、锦鲤 \\
+\midrule
+亩产 & 约2000斤 & 约2000斤 & 约10000斤 & 约2000斤 & 约2000斤 & 约2000斤/亩 & 约1000斤/亩 \\
+\midrule
+销售渠道 & 鱼贩子 & 鱼贩子 & 老板+微信 & 鱼贩子 & 鱼贩子 & 批发为主 & 市场供货 \\
+\midrule
+智能设备 & 增氧机 & 智能设备(200万) & 增氧机 & 增氧机 & 塘管家APP & 手机+投饲机+拉网机 & 半智能设备 \\
+\midrule
+水质管理 & 常规 & 几乎不换水 & 光合细菌+藕池 & 试纸检测 & 有人测水质 & 鱼菜共生循环 & 试剂自测 \\
+\midrule
+年利润 & 微利/持平 & 纯利不高 & 中等 & 成本高收入少 & 5--6万 & 20--30万 & 多数亏损 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{核心发现}
+
+\subsubsection{发现一：鱼价十年停滞，利润被中间商截取}
+
+各村庄鱼价每斤7至9元，与十年前基本持平。贩子以7至9元收购，网上卖15至25元，差价全部被中间环节截取。养殖户辛苦一年，利润却被中间商大幅吞噬。
+
+\subsubsection{发现二：从业人员全面老龄化，后继无人}
+
+受访养殖户全部50岁以上。"年轻人不愿意干""只有考不上的大学生来养鱼"——七个点位反复出现这一困境。渔业面临严重的人才断层。
+
+\subsubsection{发现三：设备更新滞后，智能化程度两极分化}
+
+\begin{itemize}[leftmargin=2em]
+    \item \textbf{传统散户}：增氧机是唯一标配设备，自动投喂机3000至4000元无人购置，水质检测靠试纸，鱼病靠肉眼观察；
+    \item \textbf{先进点位}：后芮营村已实现手机远程管理、自动投饲、拉网机等全套智能化设备，但"高端设备不太稳定"。
+\end{itemize}
+
+\subsubsection{发现四：天井村生态模式具有推广价值}
+
+光合细菌调水+藕池循环利用的"鱼---藕"闭环，成本低、易复制，是唯一具备系统水质管理方案的村庄。该模式可在全镇范围内推广。
+
+\subsubsection{发现五：后芮营模式代表转型方向但难以复制}
+
+后芮营村的鱼菜共生+大棚+智能化模式年利润可达20--30万元，但：
+\begin{itemize}[leftmargin=2em]
+    \item 需要政府补贴100--200万元；
+    \item 不适合散户，需要较大资金投入；
+    \item 高端设备稳定性有待提升。
+\end{itemize}
+
+\subsubsection{发现六：西海子村观赏鱼文旅潜力未被挖掘}
+
+西海子村拥有100多万条黄金鲤、1万多条金鱼，观赏鱼资源极其丰富，且场主有强烈的"农场一日游"文旅发展意愿，但缺乏政策支持和牵头人。
+
+\subsubsection{发现七：养殖户愿意改变但缺乏路径指导}
+
+老赵投入智能设备、老侯推动散户整合、天井村构建生态循环、后芮营场主主动询问AI和机器人——他们一直在寻找出路，但尝试是零散的、自发的。老侯那句"那敢情好"，是最真实的需求表达。
+
+\subsubsection{发现八：宠物产业链为渔业转型提供参照}
+
+东双营宠物产业园已形成"生产---仓储---直播---物流"完整闭环，单场直播最高300万元。同处一地，渔业完全可以复制"产地直发+直播电商"模式。
+
+% ==================== 五、特色产业与文化活动调研 ====================
+\section{特色产业与文化活动调研}
+
+除渔村主线调研外，实践队还参观了镇域内的特色产业项目和文化活动，了解马昌营镇的多元产业生态。
+
+\subsection{宠物文化产业园参观}
+
+实践队参观了位于东双营的北京（平谷）宠物文化产业园——PETIDEA宠想里。园区汇聚了宠物食品用品生产企业、宠物主题商业空间和大型仓储物流中心，形成了"生产---仓储---直播带货---物流配送"的完整产业链闭环。
+
+据了解，园区内商家通过直播带货，单场销售额可达50万元，高峰期甚至突破300万元。这一"邻居产业"的成功经验为渔业转型提供了重要参照——同处一地，宠物产业已实现数字化全链路运营，而渔业仍停留在最原始的"养殖---贩子---市场"环节。
+
+\begin{figure}[H]
+\centering
+\fbox{\parbox{0.8\textwidth}{\centering\vspace{1.5cm}【图9 PETIDEA宠想里宠物文化产业园】\vspace{1.5cm}}}
+\caption{PETIDEA宠想里宠物文化产业园}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\fbox{\parbox{0.8\textwidth}{\centering\vspace{1.5cm}【图10 园区内宠物主题咖啡空间】\vspace{1.5cm}}}
+\caption{园区内宠物主题咖啡空间}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\fbox{\parbox{0.8\textwidth}{\centering\vspace{1.5cm}【图11 宠物仓储物流中心】\vspace{1.5cm}}}
+\caption{宠物仓储物流中心}
+\end{figure}
+
+\subsection{"又见咖啡"乡村文旅调研}
+
+实践队参观了马昌营镇"又见咖啡"乡村文旅项目，了解了乡村休闲产业与咖啡文化的融合探索。该项目将闲置农房改造为特色咖啡空间，为乡村带来了新的消费场景和年轻客流。这种"内容驱动"的文旅模式为后续提出休闲渔业建议提供了参考。
+
+\begin{figure}[H]
+\centering
+\fbox{\parbox{0.8\textwidth}{\centering\vspace{1.5cm}【图20 "又见咖啡"乡村文旅项目】\vspace{1.5cm}}}
+\caption{"又见咖啡"乡村文旅项目}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\fbox{\parbox{0.8\textwidth}{\centering\vspace{1.5cm}【图21 "又见咖啡"内景】\vspace{1.5cm}}}
+\caption{"又见咖啡"内景}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\fbox{\parbox{0.8\textwidth}{\centering\vspace{1.5cm}【图22 "又见咖啡"品牌咖啡】\vspace{1.5cm}}}
+\caption{"又见咖啡"品牌咖啡}
+\end{figure}
+
+\subsection{非遗集中活动}
+
+实践队参加马昌营镇政府组织的非遗集中活动，深入了解了马昌营镇景泰蓝杯垫制作等非物质文化遗产的传承现状。团队成员与非遗传承人面对面交流，亲手体验了景泰蓝工艺流程。
+
+\begin{figure}[H]
+\centering
+\fbox{\parbox{0.8\textwidth}{\centering\vspace{1.5cm}【图23 景泰蓝杯垫制作非遗活动现场】\vspace{1.5cm}}}
+\caption{景泰蓝杯垫制作非遗活动现场}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\fbox{\parbox{0.8\textwidth}{\centering\vspace{1.5cm}【图24 景泰蓝杯垫手工材料包】\vspace{1.5cm}}}
+\caption{景泰蓝杯垫手工材料包}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\fbox{\parbox{0.8\textwidth}{\centering\vspace{1.5cm}【图25 景泰蓝郁金香杯垫成品】\vspace{1.5cm}}}
+\caption{景泰蓝郁金香杯垫成品}
+\end{figure}
+
+\subsection{物流中心参观}
+
+实践队还参观了镇域内的宠物用品仓储物流中心，了解了"直播+仓储+物流"的电商基础设施。
+
+\begin{figure}[H]
+\centering
+\fbox{\parbox{0.8\textwidth}{\centering\vspace{1.5cm}【图26 仓储物流中心猫砂产品】\vspace{1.5cm}}}
+\caption{仓储物流中心猫砂产品}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\fbox{\parbox{0.8\textwidth}{\centering\vspace{1.5cm}【图27 仓储物流中心内部】\vspace{1.5cm}}}
+\caption{仓储物流中心内部}
+\end{figure}
+
+\subsection{"首爱"集中活动}
+
+实践队在天井村参加"首爱"集中活动，与首都爱护动物协会的志愿者们共同开展了流浪动物保护宣传和公益领养活动。实践队员协助志愿者进行场地布置、信息登记和宣传讲解工作，体验了"产业+公益"双轮驱动的乡村服务模式。
+
+\begin{figure}[H]
+\centering
+\fbox{\parbox{0.8\textwidth}{\centering\vspace{1.5cm}【图31 "首爱"集中活动合影】\vspace{1.5cm}}}
+\caption{"首爱"集中活动合影}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\fbox{\parbox{0.8\textwidth}{\centering\vspace{1.5cm}【图32 实践队员与猫咪互动】\vspace{1.5cm}}}
+\caption{实践队员与猫咪互动}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\fbox{\parbox{0.8\textwidth}{\centering\vspace{1.5cm}【图33 流浪猫互动体验】\vspace{1.5cm}}}
+\caption{流浪猫互动体验}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\fbox{\parbox{0.8\textwidth}{\centering\vspace{1.5cm}【图34 现代化猫房设施】\vspace{1.5cm}}}
+\caption{现代化猫房设施}
+\end{figure}
+
+% ==================== 六、实践成果汇总 ====================
+\section{实践成果汇总}
+
+截至2026年7月19日，"数智渔韵"实践队已取得以下阶段性成果：
+
+\begin{table}[H]
+\centering
+\caption{实践成果汇总表}
+\begin{tabular}{clp{8cm}}
+\toprule
+\textbf{序号} & \textbf{成果类型} & \textbf{成果说明} \\
+\midrule
+1 & 大报告 & 本成果报告文档 \\
+2 & 每日工作日志 & 每日撰写实践日志，记录当日调研内容与心得 \\
+3 & 视频 & 《我们都是追梦人》短视频、每周亮点视频 \\
+4 & 招商网站 & 马昌营镇对外招商网站（已上线） \\
+5 & 公众号 & "数智渔韵"微信公众号，已发布多篇推文 \\
+6 & 调研素材 & 照片200余张，访谈视频60余条 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+% ==================== 七、意见建议 ====================
+\section{意见建议}
+
+基于六天的实地调研，实践队从智能科学与技术专业视角出发，提出以下建议：
+
+\subsection{建立"直播+仓储"渔业电商体系}
+
+参照宠物产业园"单场直播50万至300万"的成功经验，由专业团队负责品牌设计、直播运营和物流配送，养殖户专注把鱼养好。可参考"平谷大桃"的品牌化经验，打造"平谷鱼"区域公用品牌。
+
+\subsection{推广天井村"鱼---藕"生态循环模式}
+
+将光合细菌调水+藕池循环利用的技术方案标准化，通过区农业部门组织培训、制作短视频教程、在示范鱼塘安装简易水质监测设备等方式推广。
+
+\subsection{开展智能投喂与AI鱼病诊断试点}
+
+\begin{itemize}[leftmargin=2em]
+    \item 在后芮营村等先进点位引入AI水质监测、机器人巡检等前沿技术；
+    \item 自动投喂机日均成本仅2至3.5元，建议由高校或政府提供设备供散户试用；
+    \item 引入基于图像识别的AI鱼病诊断技术，解决"村里没有鱼医"的痛点。
+\end{itemize}
+
+\subsection{探索休闲渔业与文旅融合}
+
+\begin{itemize}[leftmargin=2em]
+    \item 结合平谷桃花节、大桃采摘等成熟IP和"又见咖啡"等已有文旅项目，打造"夏赏荷花秋品鱼"的全季旅游产品；
+    \item 重点开发西海子村观赏鱼资源，推动"农场一日游"项目落地；
+    \item 推动建设用地与文旅用地政策协调，为休闲渔业提供用地保障。
+\end{itemize}
+
+\subsection{建立"高校+政府+养殖户"长效合作机制}
+
+依托高校的智能技术能力，为渔业转型提供持续的技术支持。实践队开发的招商网站和公众号可以作为校地合作的数字化纽带。针对后芮营场主提出的"AI和机器人引入"需求，可建立专项技术对接通道。
+
+\end{document}
