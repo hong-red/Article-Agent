@@ -1,7 +1,7 @@
 {
-    "default_audience": "政企员工、职场人士、IT 运维管理人员",
-    "default_core_features": "本地化脱敏、开箱即用模板、私有化部署、安全合规",
-    "default_product_position": "让 AI 办公安全又简单",
-    "base_docs_path": "Documents/Lark",
+    "default_audience": "关注乡村振兴、大学生社会实践的读者",
+    "default_core_features": "渔村调研、数据分析、产业建议、非遗体验",
+    "default_product_position": "数智赋能乡村振兴",
+    "base_docs_path": "Documents",
     "output_dir": "articles"
 }
