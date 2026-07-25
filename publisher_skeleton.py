@@ -1,12 +1,13 @@
 import os
 import json
+import re
 import requests
 import urllib3
 from wechatpy import WeChatClient
 from wechatpy.exceptions import WeChatClientException
 from dotenv import load_dotenv
 
-# 禁用不安全请求警告（在使用代理且 verify=False 时）
+# 禁用不安全请求警告
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
 # 加载环境变量
@@ -40,11 +41,9 @@ class WeChatPublisher:
         except Exception as e:
             print(f"   ⚠️ 网络连接失败 (下载图片): {e}")
             
-        # 如果下载成功，尝试上传到微信
         if image_file:
             try:
                 print(f"   📤 正在上传图片到微信素材库...")
-                # 显式指定文件名 'image.jpg'，解决 40113 unsupported file type 错误
                 result = self.client.material.add('image', ('image.jpg', image_file, 'image/jpeg'))
                 return result['media_id'], result['url']
             except WeChatClientException as e:
@@ -54,9 +53,7 @@ class WeChatPublisher:
             except Exception as e:
                 print(f"   ❌ 上传图片到微信失败 (其他原因): {e}")
 
-        # 兜底方案：尝试加载本地默认封面
         print("   🔍 正在尝试使用本地默认封面 (default_cover.jpg)...")
-        # 依次检查当前目录和上级目录
         possible_paths = [
             os.path.join(os.path.dirname(__file__), "default_cover.jpg"),
             os.path.join(os.path.dirname(os.path.dirname(__file__)), "default_cover.jpg")
@@ -77,10 +74,73 @@ class WeChatPublisher:
             except Exception as e:
                 print(f"   ❌ 本地封面上传也失败了: {e}")
         else:
-            print(f"   ❌ 未找到本地默认封面。检查路径：{possible_paths}")
-            print("   💡 建议：在 gen_api 或上级目录下放一张名为 default_cover.jpg 的图片作为兜底。")
+            print(f"   ❌ 未找到本地默认封面。")
         
         return None, None
+
+    def upload_local_image_for_content(self, image_path):
+        """上传本地图片到微信，返回可用于文章正文的URL"""
+        if not os.path.exists(image_path):
+            print(f"   ⚠️ 图片文件不存在: {image_path}")
+            return None
+        try:
+            print(f"   📤 上传正文图片: {os.path.basename(image_path)}")
+            with open(image_path, 'rb') as f:
+                from io import BytesIO
+                img_bytes = BytesIO(f.read())
+            result = self.client.post(
+                'media/uploadimg',
+                files={'media': ('image.jpg', img_bytes, 'image/jpeg')}
+            )
+            if isinstance(result, dict) and 'url' in result:
+                print(f"   ✅ 正文图片上传成功")
+                return result['url']
+            else:
+                print(f"   ⚠️ 正文图片上传返回异常: {result}")
+                return None
+        except WeChatClientException as e:
+            print(f"   ❌ 正文图片上传失败: {e}")
+            if "40164" in str(e):
+                print("      💡 提示: 请将服务器IP加入微信公众号IP白名单。")
+            return None
+        except Exception as e:
+            print(f"   ❌ 正文图片上传异常: {e}")
+            return None
+
+    def upload_local_image_as_material(self, image_path):
+        """上传本地图片作为永久素材，返回 (media_id, url)"""
+        if not os.path.exists(image_path):
+            print(f"   ⚠️ 图片文件不存在: {image_path}")
+            return None, None
+        try:
+            with open(image_path, 'rb') as f:
+                result = self.client.material.add('image', ('image.jpg', f, 'image/jpeg'))
+                return result['media_id'], result['url']
+        except Exception as e:
+            print(f"   ❌ 本地素材上传失败: {e}")
+            return None, None
+
+    def process_inline_images(self, html_content, article_folder):
+        """处理HTML中的本地图片引用，上传到微信并替换URL"""
+        def replace_image(match):
+            src = match.group(1)
+            # 只处理本地相对路径的图片
+            if src.startswith('http://') or src.startswith('https://'):
+                return match.group(0)
+            
+            # 构建完整路径
+            img_path = os.path.join(article_folder, src)
+            wechat_url = self.upload_local_image_for_content(img_path)
+            if wechat_url:
+                return f'<img src="{wechat_url}" alt="{match.group(2)}" />'
+            else:
+                print(f"   ⚠️ 图片替换失败，保留原引用: {src}")
+                return match.group(0)
+        
+        # 匹配 <img src="..." alt="..." /> 或 <img src="..." alt="..." >
+        pattern = r'<img\s+src="([^"]+)"\s+alt="([^"]*)"\s*/?>'
+        processed = re.sub(pattern, replace_image, html_content)
+        return processed
 
     def create_draft(self, title, content, thumb_media_id, author="CheersAI", digest=""):
         """创建草稿箱文章"""
@@ -97,29 +157,19 @@ class WeChatPublisher:
             }
         ]
         try:
-            # 兼容性处理：如果 client 没有 draft 属性，则直接调用底层 post 方法
             if hasattr(self.client, 'draft'):
                 result = self.client.draft.add(articles)
             else:
-                # 直接调用微信草稿箱 API 接口
-                # 接口文档: https://developers.weixin.qq.com/doc/offiaccount/Draft_Box/Add_draft.html
-                print("   ℹ️ 检测到较旧版本的 wechatpy，正在使用底层 API 调用草稿箱...")
-                result = self.client.post(
-                    'draft/add',
-                    data={'articles': articles}
-                )
-            
-            # 返回草稿的 media_id
+                print("   ℹ️ 使用底层 API 调用草稿箱...")
+                result = self.client.post('draft/add', data={'articles': articles})
             return result.get('media_id') if isinstance(result, dict) else result
         except WeChatClientException as e:
             print(f"创建草稿失败: {e}")
             return None
 
     def markdown_to_html(self, markdown_content):
-        """简单的 Markdown 转 HTML，微信后台只接受 HTML"""
+        """Markdown 转 HTML"""
         import markdown
-        # 微信对 HTML 标签有严格限制，这里建议使用基础转换
-        # 实际生产中可能需要更复杂的转换逻辑以适配公众号排版
         html = markdown.markdown(markdown_content, extensions=['extra', 'nl2br'])
         return html
 
@@ -142,31 +192,41 @@ def publish_folder_to_wechat(folder_path):
     
     print(f"🚀 开始同步文章: {meta['topic']}")
 
-    # 1. 处理封面图（微信草稿必须有封面图 thumb_media_id）
-    # 尝试从元数据中获取第一张图片作为封面
+    # 1. 处理封面图
     thumb_media_id = None
-    if 'used_urls' in meta and meta['used_urls']:
+    cover_image = meta.get('cover_image')
+    
+    if cover_image:
+        cover_path = os.path.join(folder_path, cover_image)
+        print(f"📸 使用本地封面图: {cover_image}")
+        thumb_media_id, _ = publisher.upload_local_image_as_material(cover_path)
+    elif 'used_urls' in meta and meta['used_urls']:
         cover_url = meta['used_urls'][0]
         print(f"📸 正在上传封面图...")
         thumb_media_id, _ = publisher.upload_image_from_url(cover_url)
     else:
-        print(f"📸 未配置图片URL，使用本地默认封面...")
+        print(f"📸 使用本地默认封面...")
         thumb_media_id, _ = publisher.upload_image_from_url("local_default")
     
     if not thumb_media_id:
-        print("⚠️ 未能获取封面图 media_id，请检查网络或图片 URL。")
+        print("⚠️ 未能获取封面图 media_id，请检查网络或图片。")
         return
 
     # 2. 转换内容为 HTML
     print(f"📝 正在转换格式...")
     html_content = publisher.markdown_to_html(markdown_content)
 
-    # 3. 创建草稿
+    # 3. 处理正文中的本地图片
+    print(f"🖼️ 正在处理正文图片...")
+    html_content = publisher.process_inline_images(html_content, folder_path)
+
+    # 4. 创建草稿
     print(f"📤 正在提交至微信草稿箱...")
     result = publisher.create_draft(
         title=meta['topic'],
         content=html_content,
         thumb_media_id=thumb_media_id,
+        author=meta.get('author', ''),
         digest=meta.get('abstract', '')
     )
 
@@ -177,7 +237,6 @@ def publish_folder_to_wechat(folder_path):
         print(f"❌ 同步失败。")
 
 if __name__ == "__main__":
-    # 这是一个独立的同步脚本
     import sys
     if len(sys.argv) > 1:
         publish_folder_to_wechat(sys.argv[1])
