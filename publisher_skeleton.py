@@ -149,6 +149,9 @@ def publish_folder_to_wechat(folder_path):
         cover_url = meta['used_urls'][0]
         print(f"📸 正在上传封面图...")
         thumb_media_id, _ = publisher.upload_image_from_url(cover_url)
+    else:
+        print(f"📸 未配置图片URL，使用本地默认封面...")
+        thumb_media_id, _ = publisher.upload_image_from_url("local_default")
     
     if not thumb_media_id:
         print("⚠️ 未能获取封面图 media_id，请检查网络或图片 URL。")
