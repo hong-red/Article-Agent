@@ -1,0 +1,1068 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>「千人百村」数智渔韵实践队 | 深耕马昌营镇乡村振兴</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;600;700;900&family=Noto+Sans+SC:wght@300;400;500;700;900&family=Long+Cang&display=swap');
+        
+        :root {
+            --primary: #1a5f4a;
+            --primary-light: #2d8a6e;
+            --primary-dark: #0d3d2f;
+            --accent: #e8b85d;
+            --accent-dark: #c9a227;
+            --text-dark: #2c3e50;
+            --text-light: #6b7c8c;
+            --bg-cream: #faf8f3;
+            --bg-warm: #f5f0e8;
+            --border: #e8e4dc;
+            --shadow: rgba(26, 95, 74, 0.15);
+        }
+        
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body {
+            font-family: 'Noto Sans SC', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--bg-cream);
+            color: var(--text-dark);
+            line-height: 1.8;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* ============ 顶部大图 ============ */
+        .hero {
+            position: relative;
+            width: 100%;
+            min-height: 100vh;
+            background-image: url('images/00_team_photo.jpg');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            display: flex;
+            align-items: flex-end;
+            justify-content: center;
+            overflow: hidden;
+        }
+        
+        .hero::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(180deg, rgba(0,0,0,0.2) 0%, rgba(0,0,0,0.1) 40%, rgba(13,61,47,0.95) 100%);
+        }
+        
+        .hero-content {
+            position: relative;
+            z-index: 2;
+            text-align: center;
+            color: #fff;
+            padding: 60px 30px 80px;
+            max-width: 900px;
+        }
+        
+        .hero-tag {
+            display: inline-block;
+            background: rgba(232, 184, 93, 0.95);
+            color: var(--primary-dark);
+            padding: 6px 24px;
+            border-radius: 30px;
+            font-size: 13px;
+            font-weight: 700;
+            letter-spacing: 4px;
+            margin-bottom: 25px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+        }
+        
+        .hero-title {
+            font-family: 'Noto Serif SC', serif;
+            font-size: clamp(1.8rem, 5vw, 3.2rem);
+            font-weight: 900;
+            line-height: 1.4;
+            margin-bottom: 25px;
+            text-shadow: 2px 4px 20px rgba(0,0,0,0.5);
+        }
+        
+        .hero-title .highlight {
+            color: var(--accent);
+            position: relative;
+            display: inline-block;
+        }
+        
+        .hero-title .highlight::after {
+            content: '';
+            position: absolute;
+            bottom: -8px;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background: var(--accent);
+            border-radius: 2px;
+        }
+        
+        .hero-subtitle {
+            font-size: clamp(0.95rem, 2vw, 1.15rem);
+            line-height: 2;
+            opacity: 0.95;
+            max-width: 700px;
+            margin: 0 auto;
+        }
+
+        .wave-bottom {
+            position: absolute;
+            bottom: -1px;
+            left: 0;
+            width: 100%;
+            z-index: 3;
+        }
+
+        /* ============ 学校徽章栏 ============ */
+        .brand-bar {
+            background: #fff;
+            padding: 30px 20px;
+            text-align: center;
+            box-shadow: 0 2px 15px var(--shadow);
+        }
+        
+        .brand-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 20px;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        
+        .brand-logo {
+            width: 70px;
+            height: 70px;
+            border-radius: 50%;
+            box-shadow: 0 4px 15px var(--shadow);
+        }
+        
+        .brand-text {
+            text-align: left;
+        }
+        
+        .brand-name {
+            font-family: 'Noto Serif SC', serif;
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--primary);
+            line-height: 1.3;
+        }
+        
+        .brand-meta {
+            font-size: 13px;
+            color: var(--text-light);
+            margin-top: 4px;
+        }
+
+        /* ============ 文章主体 ============ */
+        .article {
+            max-width: 720px;
+            margin: 0 auto;
+            padding: 50px 24px 30px;
+            background: #fff;
+        }
+
+        /* 引言块 */
+        .lead {
+            background: linear-gradient(135deg, #f8f6f0 0%, #f0ebe3 100%);
+            border-radius: 16px;
+            padding: 30px 28px;
+            margin-bottom: 40px;
+            position: relative;
+            border: 1px solid var(--border);
+        }
+        
+        .lead::before {
+            content: '"';
+            position: absolute;
+            top: -10px;
+            left: 20px;
+            font-family: Georgia, serif;
+            font-size: 80px;
+            color: var(--accent);
+            line-height: 1;
+            opacity: 0.8;
+        }
+        
+        .lead-text {
+            font-size: 15.5px;
+            line-height: 2;
+            color: var(--text-dark);
+            text-align: justify;
+            text-indent: 2em;
+        }
+        
+        .lead-text strong {
+            color: var(--primary);
+            font-weight: 700;
+        }
+
+        /* 数据统计 */
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 12px;
+            margin: 40px 0;
+        }
+        
+        .stat {
+            text-align: center;
+            padding: 22px 8px;
+            background: linear-gradient(180deg, #fff 0%, var(--bg-warm) 100%);
+            border-radius: 12px;
+            border: 1px solid var(--border);
+            transition: all 0.3s;
+        }
+        
+        .stat:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px var(--shadow);
+        }
+        
+        .stat-num {
+            font-family: 'Noto Serif SC', serif;
+            font-size: 32px;
+            font-weight: 900;
+            background: linear-gradient(135deg, var(--primary), var(--accent-dark));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            line-height: 1.2;
+        }
+        
+        .stat-num .small {
+            font-size: 18px;
+        }
+        
+        .stat-label {
+            font-size: 13px;
+            color: var(--text-light);
+            margin-top: 6px;
+        }
+
+        /* 章节标题 */
+        .section-head {
+            margin: 50px 0 30px;
+            text-align: center;
+            position: relative;
+        }
+        
+        .section-num {
+            display: inline-block;
+            font-family: Georgia, serif;
+            font-size: 14px;
+            letter-spacing: 4px;
+            color: var(--accent-dark);
+            margin-bottom: 8px;
+            font-weight: 600;
+        }
+        
+        .section-title {
+            font-family: 'Noto Serif SC', serif;
+            font-size: 26px;
+            font-weight: 900;
+            color: var(--text-dark);
+            position: relative;
+            display: inline-block;
+            padding: 0 20px;
+        }
+        
+        .section-title::before,
+        .section-title::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            width: 30px;
+            height: 2px;
+            background: linear-gradient(90deg, var(--accent), transparent);
+        }
+        
+        .section-title::before { right: 100%; }
+        .section-title::after { left: 100%; background: linear-gradient(90deg, transparent, var(--accent)); }
+        
+        .section-sub {
+            font-size: 14px;
+            color: var(--text-light);
+            margin-top: 10px;
+            font-weight: 300;
+        }
+
+        /* 段落文字 */
+        .text {
+            font-size: 15.5px;
+            line-height: 2;
+            color: var(--text-dark);
+            text-align: justify;
+            margin: 18px 0;
+            text-indent: 2em;
+        }
+        
+        .text strong {
+            color: var(--primary);
+            font-weight: 700;
+        }
+
+        /* 大图样式 */
+        .big-img {
+            margin: 30px 0;
+            position: relative;
+        }
+        
+        .img-frame {
+            position: relative;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 8px 30px rgba(0,0,0,0.12);
+        }
+        
+        .img-frame img {
+            width: 100%;
+            height: auto;
+            display: block;
+        }
+        
+        .img-caption {
+            text-align: center;
+            padding: 12px 15px;
+            font-size: 13px;
+            color: var(--text-light);
+            background: var(--bg-warm);
+            border-radius: 0 0 12px 12px;
+            font-style: italic;
+        }
+
+        /* 双图网格 */
+        .img-pair {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin: 30px 0;
+        }
+        
+        .img-pair .img-frame {
+            height: 200px;
+        }
+        
+        .img-pair img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        /* 三图轮播式 */
+        .img-trio {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 10px;
+            margin: 30px 0;
+        }
+        
+        .img-trio .img-frame {
+            height: 150px;
+        }
+        
+        .img-trio img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        /* 引言大引用 */
+        .big-quote {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+            color: #fff;
+            padding: 30px 30px 30px 50px;
+            border-radius: 16px;
+            margin: 35px 0;
+            position: relative;
+            font-size: 16px;
+            line-height: 1.9;
+            box-shadow: 0 10px 30px rgba(26, 95, 74, 0.3);
+        }
+        
+        .big-quote::before {
+            content: '"';
+            position: absolute;
+            top: -5px;
+            left: 15px;
+            font-family: Georgia, serif;
+            font-size: 70px;
+            color: rgba(255,255,255,0.25);
+            line-height: 1;
+        }
+
+        /* 小型引用 */
+        .mini-quote {
+            background: linear-gradient(135deg, #fff8e8 0%, #f5ecd0 100%);
+            border-left: 4px solid var(--accent);
+            padding: 18px 22px;
+            margin: 20px 0;
+            border-radius: 0 10px 10px 0;
+            font-size: 14.5px;
+            color: var(--text-dark);
+            line-height: 1.8;
+        }
+        
+        .mini-quote strong {
+            color: var(--primary);
+        }
+
+        /* 案例卡片 */
+        .case {
+            background: #fff;
+            border-radius: 16px;
+            padding: 25px 28px;
+            margin: 30px 0;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.06);
+            border: 1px solid var(--border);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .case::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 5px;
+            height: 100%;
+            background: linear-gradient(180deg, var(--primary), var(--accent));
+        }
+        
+        .case-head {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 15px;
+        }
+        
+        .case-num {
+            width: 36px;
+            height: 36px;
+            background: linear-gradient(135deg, var(--primary), var(--primary-light));
+            color: #fff;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Noto Serif SC', serif;
+            font-weight: 900;
+            font-size: 16px;
+            box-shadow: 0 4px 10px rgba(26, 95, 74, 0.3);
+        }
+        
+        .case-title {
+            font-family: 'Noto Serif SC', serif;
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--primary);
+            flex: 1;
+        }
+        
+        .case-title .sub {
+            color: var(--text-light);
+            font-weight: 400;
+            font-size: 14px;
+            margin-left: 8px;
+        }
+        
+        .case-body {
+            font-size: 15px;
+            line-height: 1.95;
+            color: var(--text-dark);
+            text-align: justify;
+        }
+        
+        .case-body p { margin-bottom: 10px; }
+        .case-body p:last-child { margin-bottom: 0; }
+        
+        .insight {
+            background: linear-gradient(135deg, #f0f7f4 0%, #e0eee8 100%);
+            border-radius: 8px;
+            padding: 12px 16px;
+            margin-top: 12px;
+            font-size: 14px;
+            color: var(--primary-dark);
+            border-left: 3px solid var(--primary);
+        }
+        
+        .insight::before {
+            content: '💡 ';
+        }
+
+        /* 特色标签 */
+        .tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin: 15px 0;
+        }
+        
+        .tag {
+            background: linear-gradient(135deg, var(--primary), var(--primary-light));
+            color: #fff;
+            padding: 5px 14px;
+            border-radius: 20px;
+            font-size: 12.5px;
+            font-weight: 500;
+        }
+
+        /* 分割线 */
+        .divider {
+            text-align: center;
+            margin: 40px 0 30px;
+            color: var(--accent);
+            font-size: 20px;
+            letter-spacing: 8px;
+        }
+
+        /* 村庄一览网格 */
+        .village-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin: 25px 0;
+        }
+        
+        .village-card {
+            background: linear-gradient(135deg, #fff 0%, #faf8f3 100%);
+            border-radius: 10px;
+            padding: 15px;
+            border: 1px solid var(--border);
+            transition: all 0.3s;
+        }
+        
+        .village-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 15px var(--shadow);
+        }
+        
+        .village-name {
+            font-family: 'Noto Serif SC', serif;
+            font-size: 15px;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 6px;
+        }
+        
+        .village-desc {
+            font-size: 13px;
+            color: var(--text-light);
+            line-height: 1.6;
+        }
+
+        /* 图片说明横幅 */
+        .img-banner {
+            position: relative;
+            height: 220px;
+            border-radius: 16px;
+            overflow: hidden;
+            margin: 35px 0;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+        }
+        
+        .img-banner img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .img-banner-text {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            padding: 30px 25px 20px;
+            background: linear-gradient(180deg, transparent 0%, rgba(13,61,47,0.9) 100%);
+            color: #fff;
+        }
+        
+        .img-banner-title {
+            font-family: 'Noto Serif SC', serif;
+            font-size: 20px;
+            font-weight: 700;
+            margin-bottom: 6px;
+        }
+        
+        .img-banner-sub {
+            font-size: 13px;
+            opacity: 0.9;
+        }
+
+        /* 结尾 */
+        .ending {
+            background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary) 100%);
+            color: #fff;
+            padding: 50px 30px;
+            text-align: center;
+            border-radius: 20px 20px 0 0;
+            margin: 50px -24px -30px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .ending::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--accent), #fff, var(--accent));
+        }
+        
+        .ending-title {
+            font-family: 'Noto Serif SC', serif;
+            font-size: 22px;
+            font-weight: 700;
+            margin-bottom: 15px;
+        }
+        
+        .ending-divider {
+            width: 50px;
+            height: 2px;
+            background: var(--accent);
+            margin: 20px auto;
+        }
+        
+        .ending-text {
+            font-size: 14px;
+            line-height: 2;
+            opacity: 0.9;
+            max-width: 500px;
+            margin: 0 auto;
+        }
+        
+        .ending-meta {
+            margin-top: 25px;
+            font-size: 12px;
+            opacity: 0.7;
+            letter-spacing: 1px;
+        }
+
+        /* 响应式 */
+        @media (max-width: 768px) {
+            .hero { background-attachment: scroll; min-height: 80vh; }
+            .stats { grid-template-columns: 1fr 1fr; }
+            .img-pair, .img-trio, .village-grid { grid-template-columns: 1fr; }
+            .article { padding: 40px 18px 20px; }
+            .section-title { font-size: 22px; padding: 0 10px; }
+            .section-title::before, .section-title::after { width: 15px; }
+            .ending { margin: 40px -18px -20px; padding: 40px 20px; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ========== 顶部大图 ========== -->
+    <header class="hero">
+        <div class="hero-content">
+            <span class="hero-tag">「千人百村」暑期社会实践</span>
+            <h1 class="hero-title">
+                <span class="highlight">数智渔韵</span>实践队<br>
+                深耕马昌营镇乡村振兴
+            </h1>
+            <p class="hero-subtitle">
+                九村调研 · 六产考察<br>
+                北印学子以智能科学专业视角<br>
+                用数据和科技思维为乡村振兴建言献策
+            </p>
+        </div>
+        <svg class="wave-bottom" viewBox="0 0 1440 80" preserveAspectRatio="none">
+            <path fill="#ffffff" d="M0,32L80,42.7C160,53,320,75,480,69.3C640,64,800,32,960,26.7C1120,21,1280,43,1360,53.3L1440,64L1440,80L0,80Z"></path>
+        </svg>
+    </header>
+
+    <!-- ========== 学校品牌栏 ========== -->
+    <div class="brand-bar">
+        <div class="brand-container">
+            <img src="images/16_school_badge.jpg" alt="北京印刷学院" class="brand-logo">
+            <div class="brand-text">
+                <div class="brand-name">北京印刷学院</div>
+                <div class="brand-meta">智能科学与技术专业 · 数智渔韵实践队</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ========== 文章主体 ========== -->
+    <article class="article">
+        
+        <!-- 引言 -->
+        <div class="lead">
+            <p class="lead-text">
+                7月中旬，<strong>北京印刷学院</strong>智能科学与技术专业"数智渔韵"实践队深入<strong>平谷区马昌营镇</strong>，依托"千人百村"大学生暑期社会实践平台，围绕渔业产业转型、特色产业发展、非遗文化传承、生态保护等核心议题，对全镇<strong>9个渔业村庄</strong>和<strong>6个特色产业点</strong>开展了为期数周的密集调研。
+            </p>
+        </div>
+
+        <!-- 数据统计 -->
+        <div class="stats">
+            <div class="stat">
+                <div class="stat-num">9</div>
+                <div class="stat-label">调研村庄</div>
+            </div>
+            <div class="stat">
+                <div class="stat-num">6</div>
+                <div class="stat-label">产业考察</div>
+            </div>
+            <div class="stat">
+                <div class="stat-num">1000<span class="small">+</span></div>
+                <div class="stat-label">养殖面积(亩)</div>
+            </div>
+            <div class="stat">
+                <div class="stat-num">10<span class="small">+</span></div>
+                <div class="stat-label">养殖品种</div>
+            </div>
+        </div>
+
+        <!-- ========== 活动一 ========== -->
+        <div class="section-head">
+            <div class="section-num">— CHAPTER 01 —</div>
+            <h2 class="section-title">九村鱼塘踏勘</h2>
+            <p class="section-sub">全面摸底渔业产业实情</p>
+        </div>
+
+        <div class="big-img">
+            <div class="img-frame">
+                <img src="images/01_beidingfu_pond.jpg" alt="北定福村养殖塘">
+            </div>
+            <div class="img-caption">▲ 北定福村养殖塘实景</div>
+        </div>
+
+        <p class="text">
+            实践队先后深入<strong>北定福村、东双营村、天井村、马昌营村、王各庄村、后芮营村、前芮营村、西海子村、东陈各庄村</strong>，通过塘口实地踏勘、入户走访养殖户、座谈村"两委"等方式，全面摸排全镇渔业养殖产业发展实情。
+        </p>
+
+        <div class="big-quote">
+            调研发现，马昌营镇渔业养殖历史悠久，全镇养殖面积约千余亩，养殖品种涵盖<strong>鲤鱼、草鱼、鲫鱼、鲢鱼、鳙鱼、罗非鱼</strong>等十余个品类，年产值达数千万元。然而，各村庄在养殖模式、智能化水平、销售渠道等方面差异显著，产业发展面临多重挑战。
+        </div>
+
+        <!-- 案例 1 -->
+        <div class="case">
+            <div class="case-head">
+                <div class="case-num">1</div>
+                <div class="case-title">东双营村<span class="sub">智能化≠高效益的深思</span></div>
+            </div>
+            <div class="case-body">
+                <p>一位渔民投入<strong>近200万元</strong>购置自动投饵系统、水质监测设备、增氧系统等智能设备，控制室内显示屏实时显示水温、溶氧量等参数。然而，设备折旧和维护成本高企，养殖品种和销售模式并未同步升级，整体收益并不理想。</p>
+                <div class="insight">智能化设备的选择必须与养殖场实际规模和经营能力相匹配，盲目追求高端设备可能适得其反。</div>
+            </div>
+        </div>
+
+        <div class="img-pair">
+            <div class="img-frame">
+                <img src="images/02_dongshuangying_sign.jpg" alt="东双营村示范点">
+            </div>
+            <div class="img-frame">
+                <img src="images/03_tianjing_team.jpg" alt="天井村调研合影">
+            </div>
+        </div>
+
+        <!-- 案例 2 -->
+        <div class="case">
+            <div class="case-head">
+                <div class="case-num">2</div>
+                <div class="case-title">天井村<span class="sub">生态循环的创新实践</span></div>
+            </div>
+            <div class="case-body">
+                <p>该村约有五六户从事水产养殖，总养殖面积约百十亩。一位渔民将尾水排入旁边的藕塘，利用藕塘对养殖废水进行自然净化和循环利用，虽然尚未形成完整的鱼菜共生系统，但为生态养殖探索了简单易行的路径。在销售方面，该渔民通过微信等线上方式直接对接客户，减少了中间环节，收益相对更好。</p>
+                <div class="tags">
+                    <span class="tag">🌱 尾水净化</span>
+                    <span class="tag">♻️ 循环利用</span>
+                    <span class="tag">📱 微信直销</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- 中间大图横幅 -->
+        <div class="img-banner">
+            <img src="images/18_outdoor_visit.jpg" alt="实地走访调研">
+            <div class="img-banner-text">
+                <div class="img-banner-title">深入一线 · 躬行实践</div>
+                <div class="img-banner-sub">团队走入田间地头，与养殖户面对面交流</div>
+            </div>
+        </div>
+
+        <!-- 案例 3 -->
+        <div class="case">
+            <div class="case-head">
+                <div class="case-num">3</div>
+                <div class="case-title">后芮营村<span class="sub">智能化示范标杆</span></div>
+            </div>
+            <div class="case-body">
+                <p>后芮营村的鱼菜共生示范基地是<strong>全镇智能化程度最高</strong>的养殖项目。基地配备完整的循环水处理系统、实时水质监测系统、自动投饵系统、智能温控系统等，实现了从水质管理到投喂管理的全流程智能化控制。</p>
+                <p>基地创新打造<strong>"尾水净化—林地灌溉"</strong>生态循环模式，实现渔林共生、绿色发展，年产水产可达<strong>100吨</strong>。同时，基地设立水产病害防治服务站点，免费为周边养殖户提供鱼苗供应、鱼病诊疗、养殖技术指导等服务，成为联农带富的示范样本。</p>
+            </div>
+        </div>
+
+        <div class="img-pair">
+            <div class="img-frame">
+                <img src="images/04_houruiying_pond.jpg" alt="后芮营村鱼菜共生基地">
+            </div>
+            <div class="img-frame">
+                <img src="images/05_qianruiying_ponds.jpg" alt="连片鱼塘">
+            </div>
+        </div>
+
+        <!-- 案例 4 -->
+        <div class="case">
+            <div class="case-head">
+                <div class="case-num">4</div>
+                <div class="case-title">马昌营村<span class="sub">全镇最大养殖村</span></div>
+            </div>
+            <div class="case-body">
+                <p>马昌营村作为全镇最大的渔业养殖村，全村约<strong>25户</strong>从事水产养殖，养殖面积约<strong>350亩</strong>，品种覆盖几乎全部北京地区淡水养殖主流品类。然而，全村95%以上的水产品依赖鱼贩上门收购，养殖户对市场价格几乎没有话语权。</p>
+            </div>
+        </div>
+
+        <div class="img-pair">
+            <div class="img-frame">
+                <img src="images/19_machangying_group.jpg" alt="马昌营村党群服务中心">
+            </div>
+            <div class="img-frame">
+                <img src="images/21_village_flag.jpg" alt="村委调研">
+            </div>
+        </div>
+
+        <!-- 其他村庄速览 -->
+        <div class="mini-quote">
+            <strong>西海子村</strong>拥有规模化观赏鱼养殖基础，锦鲤和金鱼养殖利润率可观；<strong>前芮营村</strong>探索"养殖+垂钓"复合经营模式；<strong>东陈各庄村</strong>推进鱼光互补项目，实现"上可发电、下可养鱼"；<strong>北定福村</strong>和<strong>王各庄村</strong>的养殖户设备简陋，主要依靠人工经验管理。
+        </div>
+
+        <div class="img-pair">
+            <div class="img-frame">
+                <img src="images/06_dongchengezhuang.jpg" alt="东陈各庄村鱼光互补">
+            </div>
+            <div class="img-frame">
+                <img src="images/14_logo_pond.jpg" alt="鱼塘标识">
+            </div>
+        </div>
+
+        <div class="big-img">
+            <div class="img-frame">
+                <img src="images/20_outdoor_group.jpg" alt="户外走访合影">
+            </div>
+            <div class="img-caption">▲ 实践团队户外走访合影</div>
+        </div>
+
+        <div class="divider">· · · · ·</div>
+
+        <!-- ========== 活动二 ========== -->
+        <div class="section-head">
+            <div class="section-num">— CHAPTER 02 —</div>
+            <h2 class="section-title">特色产业考察</h2>
+            <p class="section-sub">六产联动 · 多元发展</p>
+        </div>
+
+        <p class="text">
+            除渔业养殖外，马昌营镇还发展了多个特色产业和文化活动项目。实践队重点考察了<strong>宠物产业园、又见咖啡、非遗活动、物流中心、首爱活动和首创环保</strong>等六个特色产业点。
+        </p>
+
+        <!-- 产业1：宠物产业园 -->
+        <div class="case">
+            <div class="case-head">
+                <div class="case-num" style="background: linear-gradient(135deg, #ff6b6b, #ee5a5a);">🐾</div>
+                <div class="case-title" style="color: #c0392b;">宠物产业园<span class="sub">打造"宠物经济"新引擎</span></div>
+            </div>
+            <div class="case-body">
+                <p>马昌营镇宠物产业园占地面积约<strong>50亩</strong>，目前已吸引多家宠物用品生产企业和宠物服务企业入驻，涵盖宠物食品加工、宠物用品制造、宠物美容培训、宠物医疗保健等多个业态。</p>
+                <div class="insight" style="border-left-color: #c0392b; color: #c0392b; background: linear-gradient(135deg, #fff0f0 0%, #ffe0e0 100%);">产业联动构想：将养殖场的低值小鱼加工为宠物食品原料，实现产业链延伸和价值提升。</div>
+            </div>
+        </div>
+
+        <div class="img-pair">
+            <div class="img-frame">
+                <img src="images/07_pet_park.jpg" alt="平谷宠咖">
+            </div>
+            <div class="img-frame">
+                <img src="images/08_pet_ecommerce.jpg" alt="宠物直播电商">
+            </div>
+        </div>
+
+        <!-- 产业2：又见咖啡 -->
+        <div class="case">
+            <div class="case-head">
+                <div class="case-num" style="background: linear-gradient(135deg, #8b6f47, #6b5337);">☕</div>
+                <div class="case-title" style="color: #6b5337;">又见咖啡<span class="sub">乡村文创的探索实践</span></div>
+            </div>
+            <div class="case-body">
+                <p>"又见咖啡"是由返乡创业年轻人经营的乡村主题咖啡馆，将当地传统的盆窑文化与现代咖啡文化相结合，打造独特的乡村文创空间。店内展示和销售当地手工艺品，定期举办手作体验活动，同时是一个<strong>宠物友好空间</strong>。</p>
+            </div>
+        </div>
+
+        <div class="big-img">
+            <div class="img-frame">
+                <img src="images/22_craft_workshop.jpg" alt="又见咖啡手作工坊">
+            </div>
+            <div class="img-caption">▲ 又见咖啡手作工坊</div>
+        </div>
+
+        <div class="big-quote" style="background: linear-gradient(135deg, #6b5337 0%, #8b6f47 100%);">
+            负责人坦言，目前咖啡馆仍在探索稳定的盈利模式，客流量受季节和天气影响较大。这表明乡村文创产业前景广阔，但也面临<strong>市场培育、客流不稳定</strong>等现实挑战。
+        </div>
+
+        <!-- 产业3：非遗活动 -->
+        <div class="case">
+            <div class="case-head">
+                <div class="case-num" style="background: linear-gradient(135deg, #c9a227, #b8941f);">✦</div>
+                <div class="case-title" style="color: #b8941f;">非遗活动<span class="sub">掐丝珐琅的匠心温度</span></div>
+            </div>
+            <div class="case-body">
+                <p>实践队参加了在镇文化中心举办的非遗掐丝珐琅杯垫制作活动。在专业老师的指导下，队员们逐一体验<strong>裁丝、掐丝、点蓝、固色</strong>等核心工序，将一根根细铜丝掐成精美图案，再小心翼翼地填入各色珐琅釉料。</p>
+                <p>整个过程需要极大的耐心和细致的手工技巧，经过数小时的努力，一件件色彩鲜艳、独具特色的掐丝珐琅杯垫逐渐成型。此次非遗体验让团队成员深刻认识到非遗传承的重要性和紧迫性，团队建议可将掐丝珐琅等非遗技艺与渔业文化相结合，开发具有地方特色的文创产品。</p>
+                <div class="tags">
+                    <span class="tag" style="background: linear-gradient(135deg, #c9a227, #b8941f);">非遗传承</span>
+                    <span class="tag" style="background: linear-gradient(135deg, #c9a227, #b8941f);">掐丝珐琅</span>
+                    <span class="tag" style="background: linear-gradient(135deg, #c9a227, #b8941f);">文创融合</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="big-img">
+            <div class="img-frame">
+                <img src="images/09_feiyi_craft.jpg" alt="非遗掐丝珐琅体验">
+            </div>
+            <div class="img-caption">▲ 非遗掐丝珐琅制作体验</div>
+        </div>
+
+        <!-- 产业4：物流中心 -->
+        <div class="case">
+            <div class="case-head">
+                <div class="case-num" style="background: linear-gradient(135deg, #4a90d9, #357abd);">📦</div>
+                <div class="case-title" style="color: #357abd;">物流中心<span class="sub">冷链物流打通"最后一公里"</span></div>
+            </div>
+            <div class="case-body">
+                <p>马昌营镇物流中心占地面积约<strong>30亩</strong>，建有标准化仓库5000平方米、分拣中心2000平方米、冷藏库1000平方米，入驻物流企业5家，日均货物吞吐量约200吨。</p>
+            </div>
+        </div>
+
+        <div class="img-pair">
+            <div class="img-frame">
+                <img src="images/10_logistics.jpg" alt="物流中心仓库">
+            </div>
+            <div class="img-frame">
+                <img src="images/23_warehouse_visit.jpg" alt="团队参观物流中心">
+            </div>
+        </div>
+
+        <div class="big-quote" style="background: linear-gradient(135deg, #357abd 0%, #4a90d9 100%);">
+            <strong>冷链物流解决方案：</strong>"以前养殖户卖鱼，都是鱼贩开着三轮车来拉，鱼在运输过程中的死亡率很高。现在有了冷链物流，活鱼可以装在充氧的专用运输箱里，通过冷链网络直接送到城区的餐饮店和超市，<strong>成活率能提高到95%以上</strong>。"
+        </div>
+
+        <!-- 产业5：首爱活动 -->
+        <div class="case">
+            <div class="case-head">
+                <div class="case-num" style="background: linear-gradient(135deg, #e74c3c, #c0392b);">❤</div>
+                <div class="case-title" style="color: #c0392b;">首爱活动<span class="sub">人宠和谐的温暖实践</span></div>
+            </div>
+            <div class="case-body">
+                <p>"首爱"是马昌营镇与<strong>首都爱护动物协会</strong>合作开展的公益活动。活动现场，老师为大家讲解了如何正确抚慰猫和狗，介绍了与宠物互动的注意事项和技巧。</p>
+                <p>在老师的引导下，团队成员近距离接触了一些性格温顺的流浪猫狗，亲手抚摸并与它们互动，感受人与动物之间的温暖连接。老师还向大家普及了动物保护的相关知识，呼吁关注流浪动物救助、科学文明养宠等理念。</p>
+            </div>
+        </div>
+
+        <div class="img-trio">
+            <div class="img-frame">
+                <img src="images/24_outdoor_activity.jpg" alt="首爱户外活动">
+            </div>
+            <div class="img-frame">
+                <img src="images/25_outdoor_lecture.jpg" alt="户外讲座">
+            </div>
+            <div class="img-frame">
+                <img src="images/11_shouai_group.jpg" alt="首爱合影">
+            </div>
+        </div>
+
+        <!-- 额外图片：工作花絮 -->
+        <div class="divider">· · · · ·</div>
+        
+        <div class="section-head">
+            <div class="section-num">— EXTRA —</div>
+            <h2 class="section-title">实践花絮</h2>
+            <p class="section-sub">记录每一份真诚与付出</p>
+        </div>
+
+        <div class="img-pair">
+            <div class="img-frame">
+                <img src="images/17_road_talk.jpg" alt="走访途中交流">
+            </div>
+            <div class="img-frame">
+                <img src="images/12_shouchuang_meeting.jpg" alt="首创活动">
+            </div>
+        </div>
+
+        <div class="img-pair">
+            <div class="img-frame">
+                <img src="images/13_daily_log.jpg" alt="日常工作记录">
+            </div>
+            <div class="img-frame">
+                <img src="images/15_wechat_article.jpg" alt="工作日常">
+            </div>
+        </div>
+
+        <div class="img-banner">
+            <img src="images/26_team_banner.jpg" alt="团队风采">
+            <div class="img-banner-text">
+                <div class="img-banner-title">携手同行 · 收获成长</div>
+                <div class="img-banner-sub">数智渔韵实践队 · 我们的故事</div>
+            </div>
+        </div>
+
+        <!-- 结语 -->
+        <div class="lead" style="margin-top: 40px;">
+            <p class="lead-text">
+                通过此次深入调研，"数智渔韵"实践队不仅全面了解了马昌营镇渔业产业和特色产业的发展现状，更以智能科学的专业视角为当地乡村振兴建言献策。团队建议可将非遗技艺与渔业文化相结合开发文创产品，将"首爱"活动与宠物产业园、乡村旅游结合打造"宠物友好"名片，继续完善冷链物流体系助力水产品远销。实践队员们在这片热土上受教育、长才干、作贡献，用实际行动诠释了新时代青年的责任与担当。
+            </p>
+        </div>
+    </article>
+
+    <!-- ========== 结尾 ========== -->
+    <div class="ending">
+        <div class="ending-title">— 数智渔韵 · 实践致远 —</div>
+        <div class="ending-divider"></div>
+        <p class="ending-text">
+            北京印刷学院智能科学与技术专业<br>
+            「千人百村」大学生暑期社会实践项目<br>
+            深耕平谷区马昌营镇 · 用数据赋能乡村振兴
+        </p>
+        <p class="ending-meta">2026 · SUMMER</p>
+    </div>
+
+    <script>
+        // 平滑滚动
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                document.querySelector(this.getAttribute('href')).scrollIntoView({ behavior: 'smooth' });
+            });
+        });
+
+        // 图片懒加载淡入
+        const imgObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    const img = entry.target;
+                    img.style.opacity = '0';
+                    img.style.transition = 'opacity 0.6s ease';
+                    requestAnimationFrame(() => { img.style.opacity = '1'; });
+                    imgObserver.unobserve(img);
+                }
+            });
+        });
+        document.querySelectorAll('img').forEach(img => imgObserver.observe(img));
+
+        // 滚动视差
+        window.addEventListener('scroll', () => {
+            const scrolled = window.pageYOffset;
+            const hero = document.querySelector('.hero');
+            if (hero && scrolled < window.innerHeight) {
+                hero.style.backgroundPositionY = scrolled * 0.5 + 'px';
+            }
+        });
+    </script>
+</body>
+</html>
