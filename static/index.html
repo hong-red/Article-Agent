@@ -20,7 +20,9 @@
     <div class="conn"></div>
     <div class="step" data-step="2"><span class="dot">2</span>成文</div>
     <div class="conn"></div>
-    <div class="step" data-step="3"><span class="dot">3</span>排版</div>
+    <div class="step" data-step="3"><span class="dot">3</span>选图</div>
+    <div class="conn"></div>
+    <div class="step" data-step="4"><span class="dot">4</span>排版</div>
   </div>
 
   <main class="container">
@@ -90,13 +92,44 @@
       </div>
       <div class="actions step-nav">
         <button class="btn ghost" data-goto="1">上一步</button>
-        <button id="btn-to-step3" class="btn primary">下一步：格式优化</button>
+        <button id="btn-to-step3" class="btn primary">下一步：选图配图</button>
       </div>
     </section>
 
     <!-- 第三步 -->
     <section id="step-3" class="panel hidden">
-      <h2>第三步 · 格式优化与美化</h2>
+      <h2>第三步 · 选图配图</h2>
+      <p class="hint">为文章挑选配图：本地上传或全网搜索，选中的图片会插入到正文末尾（可在下一步的正文里调整位置）。</p>
+      <div class="tabs">
+        <button class="tab active" data-imgtab="local">本地上传</button>
+        <button class="tab" data-imgtab="web">全网搜索</button>
+      </div>
+      <div id="img-tab-local">
+        <div class="upload-row">
+          <input type="file" id="img-file" multiple accept="image/*">
+          <button id="btn-upload-img" class="btn primary">上传</button>
+        </div>
+        <div id="img-local-grid" class="img-grid"></div>
+      </div>
+      <div id="img-tab-web" class="hidden">
+        <div class="search-row">
+          <input id="img-query" placeholder="输入关键词，例如：城市夜景 / 春天花朵 / 科技感">
+          <button id="btn-search-img" class="btn primary">搜索</button>
+        </div>
+        <p class="hint">图片来源为必应图片搜索，仅供选图参考，请注意版权。</p>
+        <div id="img-web-grid" class="img-grid"></div>
+      </div>
+      <div class="selected-head">已选图片（<span id="img-count">0</span> 张）</div>
+      <div id="img-selected" class="img-grid selected"></div>
+      <div class="actions step-nav">
+        <button class="btn ghost" data-goto="2">上一步</button>
+        <button id="btn-to-step4" class="btn primary">下一步：格式优化</button>
+      </div>
+    </section>
+
+    <!-- 第四步 -->
+    <section id="step-4" class="panel hidden">
+      <h2>第四步 · 格式优化与美化</h2>
       <div class="form-grid">
         <div class="form-row">
           <label>配色方案</label>
@@ -139,7 +172,7 @@
         <div id="s3-cover-preview" class="cover-preview"></div>
       </div>
       <div class="actions step-nav">
-        <button class="btn ghost" data-goto="2">上一步</button>
+        <button class="btn ghost" data-goto="3">上一步</button>
         <div class="step-nav-right">
           <button id="btn-save" class="btn ghost">保存到本地库</button>
           <button id="btn-push" class="btn primary">推送到草稿箱</button>

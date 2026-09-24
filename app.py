@@ -8,6 +8,7 @@
 """
 import os
 import re
+import time
 
 from fastapi import FastAPI, HTTPException, UploadFile, File
 from fastapi.middleware.cors import CORSMiddleware
@@ -17,6 +18,7 @@ from pydantic import BaseModel
 
 import config
 import db
+import imagesearch
 import llm
 import markdown_html as mh
 import wechat
@@ -37,6 +39,7 @@ db.init_db()
 BASE_DIR = config.BASE_DIR
 STATIC_DIR = os.path.join(BASE_DIR, "static")
 DEFAULT_COVER = os.path.join(BASE_DIR, "default_cover.jpg")
+IMAGES_DIR = config.IMAGES_DIR
 
 
 # ---------------- 请求模型 ----------------
@@ -464,6 +467,116 @@ def delete_material(material_id: int):
     return {"ok": True}
 
 
+# ---------------- 图片库（选图步骤用） ----------------
+class ImageSearchReq(BaseModel):
+    query: str
+
+
+class ImageFetchReq(BaseModel):
+    url: str
+    thumb: str = ""
+    page: str = ""
+
+
+def _safe_img_ext(ext):
+    ext = (ext or "").lower()
+    if ext not in (".jpg", ".jpeg", ".png", ".gif", ".webp", ".bmp"):
+        ext = ".jpg"
+    return ext
+
+
+def _unique_image_path(ext):
+    config.ensure_dirs()
+    base = f"img_{int(time.time() * 1000)}"
+    path = os.path.join(IMAGES_DIR, f"{base}{ext}")
+    i = 1
+    while os.path.exists(path):
+        path = os.path.join(IMAGES_DIR, f"{base}_{i}{ext}")
+        i += 1
+    return path
+
+
+@app.get("/api/images")
+def list_images():
+    config.ensure_dirs()
+    items = []
+    for name in sorted(os.listdir(IMAGES_DIR)):
+        if os.path.splitext(name)[1].lower() not in (".jpg", ".jpeg", ".png", ".gif", ".webp", ".bmp"):
+            continue
+        p = os.path.join(IMAGES_DIR, name)
+        if os.path.isfile(p):
+            items.append({"name": name, "url": f"/images/{name}", "size": os.path.getsize(p)})
+    return items
+
+
+@app.post("/api/images")
+async def upload_images(files: list[UploadFile] = File(...)):
+    config.ensure_dirs()
+    out = []
+    for file in files:
+        name = os.path.basename(file.filename or "image.jpg") or "image.jpg"
+        # 去掉空格等，避免 URL 里出问题
+        name = re.sub(r'[\s　]+', '_', name)
+        ext = _safe_img_ext(os.path.splitext(name)[1])
+        base = os.path.splitext(name)[0] or "image"
+        data = await file.read()
+        if not data:
+            continue
+        path = os.path.join(IMAGES_DIR, f"{base}{ext}")
+        i = 1
+        while os.path.exists(path):
+            path = os.path.join(IMAGES_DIR, f"{base}_{i}{ext}")
+            i += 1
+        with open(path, "wb") as f:
+            f.write(data)
+        final = os.path.basename(path)
+        out.append({"name": final, "url": f"/images/{final}"})
+    return out
+
+
+@app.delete("/api/images/{name}")
+def delete_image(name: str):
+    name = os.path.basename(name)
+    p = os.path.join(IMAGES_DIR, name)
+    if os.path.isfile(p):
+        try:
+            os.remove(p)
+        except OSError:
+            pass
+    return {"ok": True}
+
+
+@app.post("/api/images/search")
+def search_images(req: ImageSearchReq):
+    try:
+        return {"results": imagesearch.search(req.query)}
+    except imagesearch.SearchError as e:
+        raise HTTPException(status_code=400, detail=str(e))
+
+
+@app.post("/api/images/fetch")
+def fetch_image(req: ImageFetchReq):
+    config.ensure_dirs()
+    candidates = [u for u in (req.url, req.thumb) if u]
+    if not candidates:
+        raise HTTPException(status_code=400, detail="缺少图片地址")
+    last_err = None
+    for u in candidates:
+        try:
+            data, ctype = imagesearch.download(u, referer=req.page)
+            ext = imagesearch._ext_from_ctype(ctype)
+            if not ext:
+                ext = _safe_img_ext(os.path.splitext(u.split("?")[0])[1])
+            path = _unique_image_path(ext)
+            with open(path, "wb") as f:
+                f.write(data)
+            final = os.path.basename(path)
+            return {"name": final, "url": f"/images/{final}"}
+        except Exception as e:  # noqa: BLE001 —— 逐个候选尝试
+            last_err = e
+    raise HTTPException(status_code=400, detail=f"图片下载失败：{last_err or '未知错误'}")
+
+
 # ---------------- 静态资源 ----------------
 @app.get("/")
 def index():
@@ -473,3 +586,4 @@ def index():
 app.mount("/static", StaticFiles(directory=STATIC_DIR), name="static")
 app.mount("/files", StaticFiles(directory=config.ARTICLES_DIR), name="files")
 app.mount("/materials", StaticFiles(directory=config.MATERIALS_DIR), name="materials")
+app.mount("/images", StaticFiles(directory=config.IMAGES_DIR), name="images")

@@ -13,6 +13,10 @@ const state = {
   articleId: null,
   coverUrl: "",
   themes: [],
+  // 选图
+  selectedImages: [],   // [{key, url, name}]
+  localImages: [],      // [{name, url, size}]
+  imgResults: [],       // [{url, thumb, title, source, page}]
 };
 
 /* ---------- 基础 ---------- */
@@ -49,7 +53,7 @@ function debounce(fn, ms) {
 /* ---------- 步骤切换 ---------- */
 function goTo(n) {
   state.step = n;
-  [1, 2, 3].forEach((i) => {
+  [1, 2, 3, 4].forEach((i) => {
     $("step-" + i).classList.toggle("hidden", i !== n);
     const stepEl = document.querySelector(`.step[data-step="${i}"]`);
     stepEl.classList.toggle("active", i === n);
@@ -175,16 +179,185 @@ $("s2-md").addEventListener("input", debounce(() => {
   renderPreview(state.contentMd, state.title, "s2-preview", state.theme);
 }, 500));
 
-$("btn-to-step3").addEventListener("click", () => {
-  if (!state.contentMd) { toast("请先生成正文", "error"); return; }
+$("btn-to-step3").addEventListener("click", async () => {
   state.contentMd = $("s2-md").value;
+  if (!state.contentMd.trim()) { toast("请先生成正文", "error"); return; }
   state.title = $("s2-title").value.trim();
-  $("s3-md").value = state.contentMd;
-  renderPreview(state.contentMd, state.title, "s3-preview", state.theme);
+  await loadLocalImages();
+  renderSelected();
   goTo(3);
 });
 
-/* ---------- 第 3 步 ---------- */
+/* ---------- 第 3 步：选图 ---------- */
+document.querySelectorAll("[data-imgtab]").forEach((t) => {
+  t.addEventListener("click", () => {
+    document.querySelectorAll("[data-imgtab]").forEach((x) => x.classList.remove("active"));
+    t.classList.add("active");
+    const tab = t.dataset.imgtab;
+    $("img-tab-local").classList.toggle("hidden", tab !== "local");
+    $("img-tab-web").classList.toggle("hidden", tab !== "web");
+  });
+});
+
+async function loadLocalImages() {
+  const grid = $("img-local-grid");
+  grid.innerHTML = '<p class="muted">加载中…</p>';
+  try {
+    const items = await api("/api/images");
+    state.localImages = items;
+    renderLocalGrid();
+  } catch (e) {
+    grid.innerHTML = `<p class="muted">加载失败：${escapeHtml(e.message)}</p>`;
+  }
+}
+
+function isImgSelected(key) {
+  return state.selectedImages.some((s) => s.key === key);
+}
+
+function renderLocalGrid() {
+  const grid = $("img-local-grid");
+  if (!state.localImages.length) {
+    grid.innerHTML = '<p class="muted">还没有上传图片，点击上方「上传」添加。</p>';
+    return;
+  }
+  grid.innerHTML = state.localImages.map((img, i) => `
+    <div class="img-card ${isImgSelected(img.url) ? "selected" : ""}">
+      <div class="img-thumb"><img src="${img.url}" loading="lazy" alt=""></div>
+      <div class="img-meta">
+        <div class="img-label" title="${escapeHtml(img.name)}">${escapeHtml(img.name)}</div>
+        <button class="btn ghost small" data-luse="${i}">使用</button>
+      </div>
+    </div>`).join("");
+  grid.querySelectorAll("[data-luse]").forEach((b) =>
+    b.addEventListener("click", () => toggleLocal(parseInt(b.dataset.luse)))
+  );
+}
+
+function toggleLocal(i) {
+  const img = state.localImages[i];
+  if (isImgSelected(img.url)) {
+    state.selectedImages = state.selectedImages.filter((s) => s.key !== img.url);
+  } else {
+    state.selectedImages.push({ key: img.url, url: img.url, name: img.name });
+  }
+  renderLocalGrid();
+  renderSelected();
+}
+
+function renderSelected() {
+  const box = $("img-selected");
+  $("img-count").textContent = state.selectedImages.length;
+  if (!state.selectedImages.length) {
+    box.innerHTML = '<p class="muted">尚未选择图片</p>';
+    return;
+  }
+  box.innerHTML = state.selectedImages.map((img, i) => `
+    <div class="img-card">
+      <div class="img-thumb"><img src="${img.url}" loading="lazy" alt=""></div>
+      <div class="img-meta">
+        <div class="img-label" title="${escapeHtml(img.name)}">${escapeHtml(img.name)}</div>
+        <button class="btn ghost small" data-rm="${i}">移除</button>
+      </div>
+    </div>`).join("");
+  box.querySelectorAll("[data-rm]").forEach((b) =>
+    b.addEventListener("click", () => {
+      state.selectedImages.splice(parseInt(b.dataset.rm), 1);
+      renderSelected();
+      renderLocalGrid();
+      renderWebGrid();
+    })
+  );
+}
+
+$("btn-upload-img").addEventListener("click", async () => {
+  const files = $("img-file").files;
+  if (!files.length) { toast("请先选择图片文件", "error"); return; }
+  const btn = $("btn-upload-img");
+  btn.disabled = true; btn.textContent = "上传中…";
+  try {
+    const fd = new FormData();
+    for (const f of files) fd.append("files", f);
+    await api("/api/images", { method: "POST", body: fd });
+    $("img-file").value = "";
+    toast("图片已上传", "success");
+    await loadLocalImages();
+  } catch (e) {
+    toast(e.message, "error");
+  } finally {
+    btn.disabled = false; btn.textContent = "上传";
+  }
+});
+
+$("btn-search-img").addEventListener("click", async () => {
+  const q = $("img-query").value.trim();
+  if (!q) { toast("请输入搜索关键词", "error"); return; }
+  const btn = $("btn-search-img");
+  btn.disabled = true; btn.textContent = "搜索中…";
+  const grid = $("img-web-grid");
+  grid.innerHTML = '<p class="muted">搜索中…</p>';
+  try {
+    const r = await post("/api/images/search", { query: q });
+    state.imgResults = r.results || [];
+    renderWebGrid();
+    if (!state.imgResults.length) toast("没有找到图片", "info");
+  } catch (e) {
+    grid.innerHTML = `<p class="muted">搜索失败：${escapeHtml(e.message)}</p>`;
+    toast(e.message, "error");
+  } finally {
+    btn.disabled = false; btn.textContent = "搜索";
+  }
+});
+
+function renderWebGrid() {
+  const grid = $("img-web-grid");
+  if (!state.imgResults.length) { grid.innerHTML = ''; return; }
+  grid.innerHTML = state.imgResults.map((img, i) => `
+    <div class="img-card ${isImgSelected(img.url) ? "selected" : ""}">
+      <div class="img-thumb"><img src="${escapeHtml(img.thumb || img.url)}" loading="lazy" alt=""></div>
+      <div class="img-meta">
+        <div class="img-label" title="${escapeHtml(img.title || img.source)}">${escapeHtml(img.title || img.source || "图片")}</div>
+        <button class="btn ghost small" data-wuse="${i}">使用</button>
+      </div>
+    </div>`).join("");
+  grid.querySelectorAll("[data-wuse]").forEach((b) =>
+    b.addEventListener("click", () => useWeb(parseInt(b.dataset.wuse)))
+  );
+}
+
+async function useWeb(i) {
+  const img = state.imgResults[i];
+  if (isImgSelected(img.url)) {
+    state.selectedImages = state.selectedImages.filter((s) => s.key !== img.url);
+    renderWebGrid();
+    renderSelected();
+    return;
+  }
+  toast("正在下载图片…", "info");
+  try {
+    const r = await post("/api/images/fetch", { url: img.url, thumb: img.thumb, page: img.page });
+    state.selectedImages.push({ key: img.url, url: r.url, name: img.title || r.name });
+    renderWebGrid();
+    renderSelected();
+    toast("图片已加入", "success");
+  } catch (e) {
+    toast(e.message, "error");
+  }
+}
+
+$("btn-to-step4").addEventListener("click", () => {
+  let md = state.contentMd.trimEnd();
+  if (state.selectedImages.length) {
+    const imgs = state.selectedImages.map((s) => `![${s.name}](${s.url})`).join("\n");
+    md = md + "\n\n" + imgs;
+  }
+  state.contentMd = md;
+  $("s3-md").value = md;
+  renderPreview(md, state.title, "s3-preview", state.theme);
+  goTo(4);
+});
+
+/* ---------- 第 4 步：排版 ---------- */
 $("btn-format").addEventListener("click", async () => {
   state.contentMd = $("s3-md").value;
   state.title = $("s2-title").value.trim();
@@ -407,8 +580,9 @@ async function loadArticle(id) {
     if (a.cover_url) {
       $("s3-cover-preview").innerHTML = `<img src="${a.cover_url}" alt="封面">`;
     }
+    state.selectedImages = [];
     closeModal("modal-library");
-    goTo(3);
+    goTo(4);
     toast("已载入文章", "success");
   } catch (e) { toast(e.message, "error"); }
 }
