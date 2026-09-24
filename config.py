@@ -5,6 +5,7 @@ import os
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 DATA_DIR = os.path.join(BASE_DIR, "data")
 ARTICLES_DIR = os.path.join(DATA_DIR, "articles")
+MATERIALS_DIR = os.path.join(DATA_DIR, "materials")
 CONFIG_PATH = os.path.join(DATA_DIR, "config.json")
 DB_PATH = os.path.join(DATA_DIR, "articles.db")
 
@@ -26,6 +27,7 @@ DEFAULT_CONFIG = {
 def ensure_dirs():
     os.makedirs(DATA_DIR, exist_ok=True)
     os.makedirs(ARTICLES_DIR, exist_ok=True)
+    os.makedirs(MATERIALS_DIR, exist_ok=True)
 
 
 def load_config():

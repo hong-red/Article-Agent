@@ -1,15 +1,14 @@
 :root {
-  --bg: #f5f6f8;
+  --bg: #f7f8fa;
   --card: #ffffff;
   --text: #1f2329;
   --muted: #8a919f;
-  --border: #e5e6eb;
-  --primary: #3370ff;
-  --primary-hover: #2b5fd9;
-  --accent: #16a34a;
-  --accent-hover: #12823c;
-  --radius: 12px;
-  --shadow: 0 1px 3px rgba(0,0,0,.06), 0 4px 16px rgba(0,0,0,.05);
+  --border: #e5e7eb;
+  --primary: #2563eb;
+  --primary-hover: #1d4ed8;
+  --primary-soft: #eff4ff;
+  --radius: 10px;
+  --shadow: 0 1px 2px rgba(0, 0, 0, .04), 0 2px 8px rgba(0, 0, 0, .04);
 }
 
 * { box-sizing: border-box; }
@@ -20,54 +19,55 @@ body {
   background: var(--bg);
   color: var(--text);
   line-height: 1.6;
+  font-size: 14px;
 }
 
 /* 顶栏 */
 .topbar {
   display: flex; align-items: center; justify-content: space-between;
-  padding: 14px 24px;
-  background: #fff;
+  padding: 14px 24px; background: #fff;
   border-bottom: 1px solid var(--border);
   position: sticky; top: 0; z-index: 20;
 }
-.brand { font-size: 18px; font-weight: 700; }
+.brand { font-size: 16px; font-weight: 600; }
 .brand .sub { font-size: 13px; font-weight: 400; color: var(--muted); margin-left: 8px; }
 .topbar-actions { display: flex; gap: 8px; }
 
 /* 步骤条 */
 .stepper {
   display: flex; align-items: center; justify-content: center;
-  gap: 0; padding: 20px 0 8px; max-width: 720px; margin: 0 auto;
+  gap: 0; padding: 20px 0 6px; max-width: 720px; margin: 0 auto;
 }
 .step { display: flex; align-items: center; gap: 8px; color: var(--muted); font-size: 14px; }
 .step .dot {
-  width: 28px; height: 28px; border-radius: 50%;
-  display: inline-flex; align-items: center; justify-content: center;
-  background: #e5e6eb; color: #6b7280; font-weight: 600;
+  width: 26px; height: 26px; border-radius: 50%;
+  display: grid; place-items: center;
+  background: #eceef1; color: #6b7280; font-weight: 600; font-size: 13px;
 }
 .step.active { color: var(--text); font-weight: 600; }
 .step.active .dot { background: var(--primary); color: #fff; }
-.step.done .dot { background: #cfe3ff; color: var(--primary); }
-.conn { width: 48px; height: 2px; background: var(--border); margin: 0 12px; }
+.step.done .dot { background: var(--primary-soft); color: var(--primary); }
+.conn { width: 40px; height: 1px; background: var(--border); margin: 0 10px; }
 
 /* 布局 */
 .container { max-width: 1000px; margin: 0 auto; padding: 16px 20px 80px; }
 .panel {
-  background: var(--card); border-radius: var(--radius);
-  box-shadow: var(--shadow); padding: 24px; margin-bottom: 20px;
+  background: var(--card); border: 1px solid var(--border);
+  border-radius: var(--radius); box-shadow: var(--shadow);
+  padding: 24px; margin-bottom: 20px;
 }
-.panel h2 { margin: 0 0 18px; font-size: 18px; }
+.panel h2 { margin: 0 0 18px; font-size: 16px; font-weight: 600; }
 .hidden { display: none !important; }
 .muted { color: var(--muted); }
 
 /* 表单 */
 .form-row { display: flex; flex-direction: column; gap: 6px; margin-bottom: 14px; }
 .form-row label { font-size: 13px; color: #555; font-weight: 500; }
-.form-row label em { color: #e11d48; font-style: normal; }
+.form-row label em { color: #dc2626; font-style: normal; }
 .form-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 14px; }
 input[type="text"], input[type="password"], input[type="url"],
 textarea, select {
-  width: 100%; padding: 10px 12px; font-size: 14px;
+  width: 100%; padding: 9px 12px; font-size: 14px;
   border: 1px solid var(--border); border-radius: 8px;
   font-family: inherit; color: var(--text); background: #fff;
   transition: border-color .15s, box-shadow .15s;
@@ -75,7 +75,7 @@ textarea, select {
 textarea { resize: vertical; }
 input:focus, textarea:focus, select:focus {
   outline: none; border-color: var(--primary);
-  box-shadow: 0 0 0 3px rgba(51,112,255,.12);
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, .12);
 }
 .toggles { flex-direction: row; flex-wrap: wrap; gap: 18px; align-items: center; }
 .toggles label { display: flex; align-items: center; gap: 6px; font-size: 14px; color: #333; cursor: pointer; }
@@ -84,35 +84,36 @@ input:focus, textarea:focus, select:focus {
 /* 按钮 */
 .btn {
   display: inline-flex; align-items: center; justify-content: center; gap: 6px;
-  padding: 10px 18px; font-size: 14px; font-weight: 600;
+  padding: 9px 18px; font-size: 14px; font-weight: 500;
   border: 1px solid transparent; border-radius: 8px; cursor: pointer;
-  transition: background .15s, transform .05s; font-family: inherit;
+  transition: background .15s, border-color .15s, color .15s;
+  font-family: inherit; white-space: nowrap;
 }
 .btn:active { transform: translateY(1px); }
-.btn:disabled { opacity: .5; cursor: not-allowed; }
+.btn:disabled { opacity: .45; cursor: not-allowed; }
 .btn.primary { background: var(--primary); color: #fff; }
 .btn.primary:hover:not(:disabled) { background: var(--primary-hover); }
-.btn.accent { background: var(--accent); color: #fff; }
-.btn.accent:hover:not(:disabled) { background: var(--accent-hover); }
-.btn.ghost { background: #fff; border-color: var(--border); color: #333; }
-.btn.ghost:hover { background: #f5f6f8; }
+.btn.ghost { background: #fff; border-color: var(--border); color: #374151; }
+.btn.ghost:hover:not(:disabled) { background: #f7f8fa; }
 .btn.small { padding: 6px 12px; font-size: 13px; }
-.icon-btn { border: none; background: none; font-size: 16px; cursor: pointer; color: var(--muted); }
+.icon-btn { border: none; background: none; font-size: 18px; line-height: 1; cursor: pointer; color: var(--muted); padding: 4px; }
+.icon-btn:hover { color: var(--text); }
 
 .actions { display: flex; gap: 10px; margin: 16px 0 6px; flex-wrap: wrap; }
-.actions.step-nav { justify-content: space-between; margin-top: 22px; }
+.actions.step-nav { justify-content: space-between; margin-top: 22px; align-items: center; }
+.step-nav-right { display: flex; gap: 10px; }
 .debug-box { display: flex; gap: 10px; margin-top: 16px; }
 .debug-box input { flex: 1; }
 
 /* 题目选择 */
 .titles-box { display: flex; flex-direction: column; gap: 8px; margin-top: 16px; }
 .title-opt {
-  display: flex; align-items: center; gap: 12px; padding: 12px 14px;
+  display: flex; align-items: center; gap: 12px; padding: 11px 14px;
   border: 1px solid var(--border); border-radius: 8px; cursor: pointer;
   transition: border-color .15s, background .15s; font-size: 14px;
 }
-.title-opt:hover { border-color: var(--primary); background: #f7f9ff; }
-.title-opt.selected { border-color: var(--primary); background: #eef3ff; font-weight: 600; }
+.title-opt:hover { border-color: var(--primary); background: var(--primary-soft); }
+.title-opt.selected { border-color: var(--primary); background: var(--primary-soft); font-weight: 500; }
 .title-opt input { margin: 0; }
 
 /* 分栏 */
@@ -131,19 +132,19 @@ input:focus, textarea:focus, select:focus {
 
 /* 弹窗 */
 .modal-mask {
-  position: fixed; inset: 0; background: rgba(0,0,0,.4);
+  position: fixed; inset: 0; background: rgba(15, 18, 22, .4);
   display: flex; align-items: center; justify-content: center; z-index: 100; padding: 20px;
 }
 .modal {
   background: #fff; border-radius: var(--radius); width: 100%; max-width: 560px;
-  max-height: 90vh; overflow: auto; box-shadow: 0 12px 40px rgba(0,0,0,.2);
+  max-height: 90vh; overflow: auto; box-shadow: 0 12px 40px rgba(0, 0, 0, .2);
 }
 .modal.wide { max-width: 760px; }
-.modal-head { display: flex; align-items: center; justify-content: space-between; padding: 18px 22px; border-bottom: 1px solid var(--border); }
-.modal-head h3 { margin: 0; font-size: 16px; }
-.modal-body { padding: 20px 22px; }
+.modal-head { display: flex; align-items: center; justify-content: space-between; padding: 16px 22px; border-bottom: 1px solid var(--border); }
+.modal-head h3 { margin: 0; font-size: 15px; font-weight: 600; }
+.modal-body { padding: 18px 22px; }
 .modal-foot { padding: 14px 22px; border-top: 1px solid var(--border); text-align: right; }
-fieldset { border: 1px solid var(--border); border-radius: 8px; padding: 16px; margin: 0 0 18px; }
+fieldset { border: 1px solid var(--border); border-radius: 8px; padding: 16px; margin: 0 0 16px; }
 legend { font-size: 13px; font-weight: 600; color: #555; padding: 0 6px; }
 
 /* 文章库列表 */
@@ -153,23 +154,35 @@ legend { font-size: 13px; font-weight: 600; color: #555; padding: 0 6px; }
   padding: 12px 14px; border: 1px solid var(--border); border-radius: 8px;
 }
 .lib-item .meta { flex: 1; min-width: 0; }
-.lib-item .title { font-weight: 600; font-size: 14px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.lib-item .title { font-weight: 500; font-size: 14px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .lib-item .sub { font-size: 12px; color: var(--muted); }
 .lib-item .ops { display: flex; gap: 6px; }
-.badge { font-size: 11px; padding: 2px 8px; border-radius: 10px; background: #eef3ff; color: var(--primary); }
-.badge.pushed { background: #e6f7ee; color: var(--accent); }
+.badge { font-size: 11px; padding: 2px 8px; border-radius: 10px; background: var(--primary-soft); color: var(--primary); }
+.badge.pushed { background: #ecfdf3; color: #16a34a; }
 
 /* Toast */
 .toast {
   position: fixed; bottom: 28px; left: 50%; transform: translateX(-50%);
-  background: #1f2329; color: #fff; padding: 11px 20px; border-radius: 8px;
-  font-size: 14px; z-index: 200; box-shadow: 0 6px 20px rgba(0,0,0,.25);
+  background: #1f2329; color: #fff; padding: 10px 18px; border-radius: 8px;
+  font-size: 14px; z-index: 200; box-shadow: 0 6px 20px rgba(0, 0, 0, .25);
   max-width: 80vw;
 }
-.toast.error { background: #d92d20; }
+.toast.error { background: #dc2626; }
 .toast.success { background: #16a34a; }
+
+.tabs { display: flex; border-bottom: 1px solid var(--border); padding: 0 22px; }
+.tab {
+  border: none; background: none; padding: 12px 18px; font-size: 14px;
+  color: var(--muted); cursor: pointer; border-bottom: 2px solid transparent;
+  font-family: inherit;
+}
+.tab:hover { color: var(--text); }
+.tab.active { color: var(--primary); border-bottom-color: var(--primary); font-weight: 500; }
+.upload-row { display: flex; gap: 10px; margin-bottom: 14px; }
+.upload-row input[type="file"] { flex: 1; font-size: 13px; }
 
 @media (max-width: 720px) {
   .form-grid { grid-template-columns: 1fr; }
   .split { grid-template-columns: 1fr; }
+  .actions.step-nav { flex-direction: column; align-items: stretch; }
 }

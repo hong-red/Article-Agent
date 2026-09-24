@@ -375,6 +375,42 @@ def push_draft(article_id: int):
         raise HTTPException(status_code=400, detail=str(e))
 
 
+# ---------------- 素材库 ----------------
+@app.get("/api/materials")
+def list_materials():
+    return db.list_materials()
+
+
+@app.post("/api/materials")
+async def upload_material(file: UploadFile = File(...)):
+    name = os.path.basename(file.filename or "material.txt") or "material.txt"
+    base, ext = os.path.splitext(name)
+    path = os.path.join(config.MATERIALS_DIR, name)
+    i = 1
+    while os.path.exists(path):
+        path = os.path.join(config.MATERIALS_DIR, f"{base}_{i}{ext}")
+        i += 1
+    data = await file.read()
+    with open(path, "wb") as f:
+        f.write(data)
+    mid = db.insert_material(os.path.basename(path), path, len(data))
+    return {"id": mid, "name": os.path.basename(path)}
+
+
+@app.delete("/api/materials/{material_id}")
+def delete_material(material_id: int):
+    m = db.get_material(material_id)
+    if m:
+        p = m.get("path") or ""
+        if p and os.path.exists(p):
+            try:
+                os.remove(p)
+            except OSError:
+                pass
+        db.delete_material(material_id)
+    return {"ok": True}
+
+
 # ---------------- 静态资源 ----------------
 @app.get("/")
 def index():
@@ -383,3 +419,4 @@ def index():
 
 app.mount("/static", StaticFiles(directory=STATIC_DIR), name="static")
 app.mount("/files", StaticFiles(directory=config.ARTICLES_DIR), name="files")
+app.mount("/materials", StaticFiles(directory=config.MATERIALS_DIR), name="materials")

@@ -32,6 +32,17 @@ def init_db():
             )
             """
         )
+        conn.execute(
+            """
+            CREATE TABLE IF NOT EXISTS materials (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                name TEXT,
+                path TEXT,
+                size INTEGER,
+                created_at TEXT
+            )
+            """
+        )
 
 
 def _now():
@@ -91,3 +102,32 @@ def delete_article(article_id):
             os.rmdir(cover_dir)
         except OSError:
             pass
+
+
+def insert_material(name, path, size):
+    now = _now()
+    with _conn() as conn:
+        cur = conn.execute(
+            "INSERT INTO materials (name, path, size, created_at) VALUES (?, ?, ?, ?)",
+            (name, path, size, now),
+        )
+        return cur.lastrowid
+
+
+def list_materials():
+    with _conn() as conn:
+        rows = conn.execute(
+            "SELECT id, name, size, created_at FROM materials ORDER BY created_at DESC"
+        ).fetchall()
+    return [dict(r) for r in rows]
+
+
+def get_material(material_id):
+    with _conn() as conn:
+        row = conn.execute("SELECT * FROM materials WHERE id = ?", (material_id,)).fetchone()
+    return dict(row) if row else None
+
+
+def delete_material(material_id):
+    with _conn() as conn:
+        conn.execute("DELETE FROM materials WHERE id = ?", (material_id,))

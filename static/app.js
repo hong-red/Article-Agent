@@ -90,7 +90,7 @@ $("btn-gen-titles").addEventListener("click", async () => {
   } catch (e) {
     toast(e.message, "error");
   } finally {
-    btn.disabled = false; btn.textContent = "✨ 生成题目";
+    btn.disabled = false; btn.textContent = "生成题目";
   }
 });
 
@@ -141,7 +141,7 @@ $("btn-gen-content").addEventListener("click", async () => {
   } catch (e) {
     toast(e.message, "error");
   } finally {
-    btn.disabled = false; btn.textContent = "✍️ 生成正文";
+    btn.disabled = false; btn.textContent = "生成正文";
   }
 });
 
@@ -165,7 +165,7 @@ $("btn-refine").addEventListener("click", async () => {
   } catch (e) {
     toast(e.message, "error");
   } finally {
-    btn.disabled = false; btn.textContent = "🔄 按意见重新生成";
+    btn.disabled = false; btn.textContent = "按意见重新生成";
   }
 });
 
@@ -207,7 +207,7 @@ $("btn-format").addEventListener("click", async () => {
   } catch (e) {
     toast(e.message, "error");
   } finally {
-    btn.disabled = false; btn.textContent = "🎨 格式优化";
+    btn.disabled = false; btn.textContent = "格式优化";
   }
 });
 
@@ -275,12 +275,12 @@ $("btn-push").addEventListener("click", async () => {
       await uploadCoverIfNeeded(state.articleId);
     }
     const r = await post(`/api/articles/${state.articleId}/push`, {});
-    toast("已推送到公众号草稿箱 ✓", "success");
+    toast("已推送到公众号草稿箱", "success");
     console.log("draft_media_id:", r.draft_media_id);
   } catch (e) {
     toast(e.message, "error");
   } finally {
-    btn.disabled = false; btn.textContent = "🚀 推送到草稿箱";
+    btn.disabled = false; btn.textContent = "推送到草稿箱";
   }
 });
 
@@ -339,10 +339,10 @@ $("btn-test-llm").addEventListener("click", async () => {
   try {
     await post("/api/config", body);
     const r = await post("/api/test/llm", {});
-    $("llm-test-result").textContent = "✓ 连接正常：" + (r.reply || "");
+    $("llm-test-result").textContent = "连接正常：" + (r.reply || "");
     $("llm-test-result").style.color = "#16a34a";
   } catch (e) {
-    $("llm-test-result").textContent = "✗ " + e.message;
+    $("llm-test-result").textContent = e.message;
     $("llm-test-result").style.color = "#d92d20";
   }
 });
@@ -406,6 +406,84 @@ async function delArticle(id) {
     if (state.articleId === id) state.articleId = null;
     toast("已删除", "success");
     await loadLibrary();
+  } catch (e) { toast(e.message, "error"); }
+}
+
+/* ---------- 素材库 ---------- */
+document.querySelectorAll(".tab").forEach((t) => {
+  t.addEventListener("click", () => {
+    document.querySelectorAll(".tab").forEach((x) => x.classList.remove("active"));
+    t.classList.add("active");
+    const tab = t.dataset.tab;
+    $("tab-articles").classList.toggle("hidden", tab !== "articles");
+    $("tab-materials").classList.toggle("hidden", tab !== "materials");
+    if (tab === "materials") loadMaterials();
+  });
+});
+
+function fmtSize(n) {
+  n = n || 0;
+  if (n < 1024) return n + " B";
+  if (n < 1024 * 1024) return (n / 1024).toFixed(1) + " KB";
+  return (n / 1024 / 1024).toFixed(1) + " MB";
+}
+
+async function loadMaterials() {
+  const list = $("materials-list");
+  list.innerHTML = '<p class="muted">加载中…</p>';
+  try {
+    const items = await api("/api/materials");
+    if (!items.length) {
+      list.innerHTML = '<p class="muted">暂无素材，可上传 Word / PDF / 文本等文件</p>';
+      return;
+    }
+    list.innerHTML = items.map((m) => `
+      <div class="lib-item">
+        <div class="meta">
+          <div class="title">${escapeHtml(m.name)}</div>
+          <div class="sub">${fmtSize(m.size)} · ${m.created_at || ""}</div>
+        </div>
+        <div class="ops">
+          <a class="btn ghost small" href="/materials/${encodeURIComponent(m.name)}" target="_blank">打开</a>
+          <button class="btn ghost small" data-mdel="${m.id}">删除</button>
+        </div>
+      </div>
+    `).join("");
+    list.querySelectorAll("[data-mdel]").forEach((b) =>
+      b.addEventListener("click", () => delMaterial(parseInt(b.dataset.mdel)))
+    );
+  } catch (e) {
+    list.innerHTML = `<p class="muted">加载失败：${escapeHtml(e.message)}</p>`;
+  }
+}
+
+$("btn-upload-material").addEventListener("click", async () => {
+  const files = $("mat-file").files;
+  if (!files.length) { toast("请先选择文件", "error"); return; }
+  const btn = $("btn-upload-material");
+  btn.disabled = true;
+  try {
+    for (const f of files) {
+      const fd = new FormData();
+      fd.append("file", f);
+      await api("/api/materials", { method: "POST", body: fd });
+    }
+    $("mat-file").value = "";
+    toast("素材已上传", "success");
+    await loadMaterials();
+  } catch (e) {
+    toast(e.message, "error");
+  } finally {
+    btn.disabled = false;
+  }
+});
+
+async function delMaterial(id) {
+  if (!confirm("确定删除这个素材？")) return;
+  try {
+    await api(`/api/materials/${id}`, { method: "DELETE" });
+    toast("已删除", "success");
+    await loadMaterials();
   } catch (e) { toast(e.message, "error"); }
 }
 
