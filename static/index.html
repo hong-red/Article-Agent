@@ -217,11 +217,12 @@
             <input id="cfg-secret" type="password" placeholder="...">
           </div>
           <div class="form-row">
-            <label>本机公网 IP（IP 白名单用）</label>
+            <label>本机公网 IP（需加入公众号「IP白名单」）</label>
             <div class="debug-box">
               <input id="cfg-ip" placeholder="点击右侧按钮获取" readonly>
               <button id="btn-get-ip" class="btn ghost small">获取本机公网IP</button>
             </div>
+            <p class="hint">把上面显示的 IP 全部加到公众号「IP白名单」里；家宽公网 IP 多为动态（会变），最好申请固定公网 IP，或 IP 变了就重新获取更新。</p>
           </div>
           <div class="form-row">
             <label>作者名（可选）</label>
@@ -235,7 +236,7 @@
             <label><input type="checkbox" id="cfg-comment"> 开启评论</label>
             <label><input type="checkbox" id="cfg-fans-comment"> 仅粉丝可评论</label>
           </div>
-          <p class="hint">提示：草稿推送需要「认证公众号」的 AppID / AppSecret，且需要一张封面图。</p>
+          <p class="hint">提示：草稿推送需要「认证公众号」的 AppID / AppSecret + 一张封面图，且本机公网 IP 需加入公众号「IP白名单」（详见 README）。</p>
         </fieldset>
       </div>
       <div class="modal-foot">
