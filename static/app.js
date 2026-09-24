@@ -552,6 +552,27 @@ $("btn-test-llm").addEventListener("click", async () => {
   }
 });
 
+$("btn-get-ip").addEventListener("click", async () => {
+  const btn = $("btn-get-ip");
+  const input = $("cfg-ip");
+  btn.disabled = true; btn.textContent = "获取中…";
+  input.value = "";
+  try {
+    const r = await api("/api/wechat/ip");
+    if (r.ip) {
+      input.value = r.ip;
+      try { await navigator.clipboard.writeText(r.ip); toast("已获取并复制本机公网 IP：" + r.ip, "success"); }
+      catch (e) { toast("本机公网 IP：" + r.ip, "success"); }
+    } else {
+      toast("获取失败，请手动到 ip.3322.net 查询本机公网 IP", "error");
+    }
+  } catch (e) {
+    toast("获取失败：" + e.message, "error");
+  } finally {
+    btn.disabled = false; btn.textContent = "获取本机公网IP";
+  }
+});
+
 /* ---------- 文章库 ---------- */
 async function loadLibrary() {
   const list = $("library-list");

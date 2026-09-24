@@ -36,6 +36,7 @@ python -m uvicorn app:app --host 127.0.0.1 --port 8000
 
 > **推送到草稿箱**需要「认证公众号」的 AppID / AppSecret，并前往
 > [微信公众平台](https://mp.weixin.qq.com/) → 设置与开发 → 基本配置，把本机/服务器 IP 加入 **IP 白名单**。
+> 可在网页「设置」里点「获取本机公网IP」一键复制。
 
 ## 📂 项目结构
 

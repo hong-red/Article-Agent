@@ -1,5 +1,6 @@
 """微信公众号草稿箱推送（可选功能，需自行配置 AppID / AppSecret）。"""
 import os
+import re
 import time
 
 import requests
@@ -13,6 +14,41 @@ os.environ["no_proxy"] = "api.weixin.qq.com,*.qq.com,qq.com,weixin.qq.com"
 
 class WeChatError(Exception):
     pass
+
+
+# 常见错误码 → 友好提示
+FRIENDLY = {
+    "40164": "本机公网 IP 不在公众号「IP 白名单」里。请到 mp.weixin.qq.com → 设置与开发 → 基本配置 → IP白名单，把本机公网 IP 加进去。",
+    "40013": "AppID 无效，请检查「设置」里填写的 AppID。",
+    "40125": "AppSecret 无效，请检查「设置」里填写的 AppSecret。",
+    "40001": "AppSecret 错误或 access_token 失效，请重新核对 AppSecret。",
+    "41001": "缺少 access_token（通常是 AppSecret 错误）。",
+    "48001": "公众号未认证或接口无权限（推送草稿需要「认证公众号」）。",
+}
+
+
+def _friendly(data):
+    code = str(data.get("errcode", ""))
+    hint = FRIENDLY.get(code, "")
+    return f"errcode={code} errmsg={data.get('errmsg')}" + (f"（{hint}）" if hint else "")
+
+
+def get_public_ip():
+    """探测本机公网出口 IP（用于配置公众号 IP 白名单）。"""
+    urls = ["http://ip.3322.net", "https://4.ipw.cn", "https://myip.ipip.net"]
+    s = requests.Session()
+    s.trust_env = False
+    s.proxies = {"http": None, "https": None}
+    for u in urls:
+        try:
+            r = s.get(u, timeout=8)
+            if r.status_code == 200:
+                m = re.search(r'(\d{1,3}\.){3}\d{1,3}', r.text)
+                if m:
+                    return m.group(0)
+        except requests.RequestException:
+            continue
+    return ""
 
 
 _TOKEN = {"token": None, "expires_at": 0}
@@ -35,7 +71,7 @@ def get_access_token(appid, appsecret):
 
     data = resp.json()
     if "access_token" not in data:
-        raise WeChatError(f"获取 access_token 失败：errcode={data.get('errcode')} errmsg={data.get('errmsg')}")
+        raise WeChatError(f"获取 access_token 失败：{_friendly(data)}")
 
     _TOKEN["token"] = data["access_token"]
     _TOKEN["expires_at"] = time.time() + int(data.get("expires_in", 7200))
@@ -55,7 +91,7 @@ def upload_thumb(appid, appsecret, file_path):
 
     data = resp.json()
     if "media_id" not in data:
-        raise WeChatError(f"上传封面图失败：errcode={data.get('errcode')} errmsg={data.get('errmsg')}")
+        raise WeChatError(f"上传封面图失败：{_friendly(data)}")
     return data["media_id"]
 
 
@@ -72,7 +108,7 @@ def upload_image(appid, appsecret, file_path):
 
     data = resp.json()
     if "url" not in data:
-        raise WeChatError(f"上传正文配图失败：errcode={data.get('errcode')} errmsg={data.get('errmsg')}")
+        raise WeChatError(f"上传正文配图失败：{_friendly(data)}")
     return data["url"]
 
 
@@ -91,5 +127,5 @@ def add_draft(appid, appsecret, article):
 
     data = resp.json()
     if data.get("errcode", 0) != 0:
-        raise WeChatError(f"推送草稿失败：errcode={data.get('errcode')} errmsg={data.get('errmsg')}")
+        raise WeChatError(f"推送草稿失败：{_friendly(data)}")
     return data.get("media_id")

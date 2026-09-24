@@ -202,6 +202,11 @@ def test_llm():
         raise HTTPException(status_code=400, detail=str(e))
 
 
+@app.get("/api/wechat/ip")
+def wechat_ip():
+    return {"ip": wechat.get_public_ip()}
+
+
 # ---------------- 第 1 步：生成题目 ----------------
 @app.post("/api/generate/titles")
 def generate_titles(req: TitleReq):
