@@ -45,6 +45,7 @@ class TitleReq(BaseModel):
     count: int = 5
     style: str = ""
     extra: str = ""
+    template: str = "general"
 
 
 class ContentReq(BaseModel):
@@ -54,6 +55,7 @@ class ContentReq(BaseModel):
     extra: str = ""
     feedback: str = ""
     previous_content: str = ""
+    template: str = "general"
 
 
 class FormatReq(BaseModel):
@@ -65,6 +67,7 @@ class FormatReq(BaseModel):
     add_golden: bool = False
     add_follow: bool = False
     polish: bool = True
+    template: str = "general"
 
 
 class RenderReq(BaseModel):
@@ -80,6 +83,42 @@ class ArticleReq(BaseModel):
     content_html: str = ""
     cover: str = ""
     theme: str = "default"
+
+
+# ---------------- 爆款写作模板 ----------------
+TEMPLATES = {
+    "general": {"name": "通用", "title": "", "content": "", "format": ""},
+    "listicle": {
+        "name": "干货清单型",
+        "title": "标题突出「数字 + 实用价值」，如「5 个方法」「一篇讲透」，制造收藏欲。",
+        "content": "用「总-分」结构：开头快速点出痛点/收益；主体用 ## 分点，每点一个小标题 + 说明 + 例子；结尾给行动建议。多用加粗和列表。",
+        "format": "小标题带序号感，重点结论加粗，关键处用引用块强调。",
+    },
+    "hook": {
+        "name": "悬念钩子型",
+        "title": "标题制造强烈好奇心或反差，如「为什么…」「…的真相」，让人忍不住点开。",
+        "content": "开头 1~2 句抛悬念或反常识结论，正文层层揭晓，结尾收束点题。多用短句、留白。",
+        "format": "开头悬念句单独成段或加粗，段落短、节奏快。",
+    },
+    "emotion": {
+        "name": "情感共鸣型",
+        "title": "标题带情绪和代入感，如「多少人…」「原来…」，让读者觉得说的是自己。",
+        "content": "用一个真实感强的故事或场景开头，中间引发共鸣，结尾升华情绪并引导转发。语言温暖、有画面感。",
+        "format": "金句单独成段并加粗，营造情绪节奏。",
+    },
+    "opinion": {
+        "name": "热点观点型",
+        "title": "标题带鲜明观点或冲突，如「…才是最…」「别再说…了」。",
+        "content": "开头亮出犀利观点，主体摆事实讲道理、分点论证，结尾给有力结论。逻辑清晰、金句频出。",
+        "format": "核心观点用引用块或加粗突出，金句醒目。",
+    },
+    "story": {
+        "name": "故事叙事型",
+        "title": "标题有故事感和画面感，如「那个…的人，后来…」。",
+        "content": "以具体人物/事件的故事线展开，有起承转合，结尾回扣主题或留余味。多用细节描写。",
+        "format": "段落自然连贯，关键转折可加粗，营造叙事节奏。",
+    },
+}
 
 
 # ---------------- 工具 ----------------
@@ -145,6 +184,11 @@ def themes():
     return mh.list_schemes()
 
 
+@app.get("/api/templates")
+def templates():
+    return [{"key": k, "name": v["name"]} for k, v in TEMPLATES.items()]
+
+
 @app.post("/api/test/llm")
 def test_llm():
     try:
@@ -159,6 +203,8 @@ def test_llm():
 def generate_titles(req: TitleReq):
     style_line = f"风格倾向：{req.style}" if req.style else ""
     extra_line = f"补充说明：{req.extra}" if req.extra else ""
+    tpl = TEMPLATES.get(req.template, TEMPLATES["general"])
+    tpl_line = f"标题风格：{tpl['title']}" if tpl["title"] else ""
     user = (
         f"请为主题「{req.topic}」生成 {req.count} 个吸引人的公众号文章标题。\n"
         "要求：\n"
@@ -168,6 +214,7 @@ def generate_titles(req: TitleReq):
         "4. 只输出标题，每行一个，不要编号、引号或解释\n"
         + (style_line + "\n" if style_line else "")
         + (extra_line + "\n" if extra_line else "")
+        + (tpl_line + "\n" if tpl_line else "")
     )
     raw = _llm(
         [
@@ -195,6 +242,8 @@ def generate_titles(req: TitleReq):
 def generate_content(req: ContentReq):
     style_line = f"风格倾向：{req.style}" if req.style else ""
     extra_line = f"补充说明：{req.extra}" if req.extra else ""
+    tpl = TEMPLATES.get(req.template, TEMPLATES["general"])
+    tpl_line = f"写作模板：{tpl['content']}" if tpl["content"] else ""
     feedback_line = (
         f"【修改要求】{req.feedback}\n请在上面的要求基础上，重点满足这条修改要求。"
         if req.feedback else ""
@@ -209,6 +258,7 @@ def generate_content(req: ContentReq):
         f"主题：{req.topic}\n"
         + (style_line + "\n" if style_line else "")
         + (extra_line + "\n" if extra_line else "")
+        + (tpl_line + "\n" if tpl_line else "")
         + "\n写作要求：\n"
         "1. 使用 Markdown 格式：小标题用 ##，适当使用列表、加粗、引用\n"
         "2. 有清晰的开头引入、主体分点、结尾总结\n"
@@ -231,6 +281,7 @@ def generate_content(req: ContentReq):
 # ---------------- 第 3 步：格式优化 ----------------
 @app.post("/api/generate/format")
 def generate_format(req: FormatReq):
+    tpl = TEMPLATES.get(req.template, TEMPLATES["general"])
     if req.polish:
         reqs = []
         if req.add_summary:
@@ -241,6 +292,8 @@ def generate_format(req: FormatReq):
             reqs.append("- 在结尾加一段自然的「引导关注」语")
         if req.tone:
             reqs.append(f"- 整体语气调整为：{req.tone}")
+        if tpl.get("format"):
+            reqs.append(tpl["format"])
         if not reqs:
             reqs.append("- 优化小标题层级、段落节奏，让重点更突出")
         reqs.append("- 保持原意和事实不变，不新增虚假信息")

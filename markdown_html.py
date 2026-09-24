@@ -93,18 +93,34 @@ def markdown_to_html(md, theme="default"):
         m = re.match(r'^(#{1,6})\s+(.*)$', line)
         if m:
             level = len(m.group(1))
-            size = {1: 22, 2: 20, 3: 18, 4: 16, 5: 15, 6: 14}[level]
             text = _inline(m.group(2), s)
-            out.append(
-                f'<h{level} style="font-size:{size}px;font-weight:700;color:{s["heading"]};'
-                f'margin:24px 0 12px;line-height:1.4;">{text}</h{level}>'
-            )
+            if level == 1:
+                out.append(
+                    f'<h1 style="font-size:22px;font-weight:700;color:{s["heading"]};'
+                    f'margin:24px 0 12px;line-height:1.4;">{text}</h1>'
+                )
+            elif level == 2:
+                out.append(
+                    f'<h2 style="font-size:19px;font-weight:700;color:{s["heading"]};'
+                    f'border-left:4px solid {s["accent"]};padding-left:10px;'
+                    f'margin:28px 0 14px;line-height:1.4;">{text}</h2>'
+                )
+            else:
+                size = {3: 17, 4: 16, 5: 15, 6: 14}[level]
+                out.append(
+                    f'<h{level} style="font-size:{size}px;font-weight:700;color:{s["heading"]};'
+                    f'margin:22px 0 10px;line-height:1.4;">{text}</h{level}>'
+                )
             i += 1
             continue
 
         # 分割线
         if re.match(r'^([-*_]\s*){3,}$', stripped):
-            out.append('<hr style="border:none;border-top:1px solid #e5e6eb;margin:24px 0;">')
+            out.append(
+                '<div style="text-align:center;margin:24px 0;">'
+                f'<span style="display:inline-block;width:42px;height:3px;'
+                f'background:{s["accent"]};border-radius:2px;"></span></div>'
+            )
             i += 1
             continue
 
@@ -116,9 +132,9 @@ def markdown_to_html(md, theme="default"):
                 i += 1
             text = _inline("<br>".join(buf), s)
             out.append(
-                f'<blockquote style="border-left:4px solid {s["accent"]};background:{s["quote_bg"]};'
-                'margin:16px 0;padding:10px 14px;color:#555;border-radius:0 6px 6px 0;'
-                f'line-height:1.7;">{text}</blockquote>'
+                f'<blockquote style="background:{s["quote_bg"]};border-left:4px solid {s["accent"]};'
+                'padding:14px 16px;margin:18px 0;border-radius:8px;color:#555;'
+                f'font-size:15px;line-height:1.7;">{text}</blockquote>'
             )
             continue
 

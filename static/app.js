@@ -3,7 +3,7 @@ const $ = (id) => document.getElementById(id);
 
 const state = {
   step: 1,
-  topic: "", style: "", extra: "",
+  topic: "", style: "", extra: "", template: "general",
   titles: [], selectedTitle: "",
   title: "",
   contentMd: "",
@@ -78,12 +78,13 @@ $("btn-gen-titles").addEventListener("click", async () => {
   state.topic = topic;
   state.style = $("s1-style").value.trim();
   state.extra = $("s1-extra").value.trim();
+  state.template = $("s1-template").value;
   const count = parseInt($("s1-count").value);
 
   const btn = $("btn-gen-titles");
   btn.disabled = true; btn.textContent = "生成中…";
   try {
-    const r = await post("/api/generate/titles", { topic, count, style: state.style, extra: state.extra });
+    const r = await post("/api/generate/titles", { topic, count, style: state.style, extra: state.extra, template: state.template });
     state.titles = r.titles;
     renderTitles();
     toast("题目已生成，请选择一个", "success");
@@ -131,7 +132,7 @@ $("btn-gen-content").addEventListener("click", async () => {
   try {
     const r = await post("/api/generate/content", {
       topic: state.topic, title: state.title,
-      style: state.style, extra: state.extra,
+      style: state.style, extra: state.extra, template: state.template,
       feedback: "", previous_content: "",
     });
     state.contentMd = r.content;
@@ -154,7 +155,7 @@ $("btn-refine").addEventListener("click", async () => {
   try {
     const r = await post("/api/generate/content", {
       topic: state.topic, title: state.title,
-      style: state.style, extra: state.extra,
+      style: state.style, extra: state.extra, template: state.template,
       feedback, previous_content: $("s2-md").value,
     });
     state.contentMd = r.content;
@@ -193,7 +194,7 @@ $("btn-format").addEventListener("click", async () => {
   try {
     const r = await post("/api/generate/format", {
       content: state.contentMd, title: state.title,
-      theme: state.theme, tone: state.tone,
+      theme: state.theme, tone: state.tone, template: state.template,
       add_summary: $("s3-summary").checked,
       add_golden: $("s3-golden").checked,
       add_follow: $("s3-follow").checked,
@@ -208,6 +209,19 @@ $("btn-format").addEventListener("click", async () => {
     toast(e.message, "error");
   } finally {
     btn.disabled = false; btn.textContent = "格式优化";
+  }
+});
+
+$("btn-copy-html").addEventListener("click", async () => {
+  const md = $("s3-md").value;
+  const title = $("s2-title").value.trim();
+  if (!md.trim()) { toast("正文为空", "error"); return; }
+  try {
+    const r = await post("/api/render", { content: md, title, theme: state.theme });
+    await navigator.clipboard.writeText(r.html);
+    toast("已复制 HTML，可粘贴到秀米或公众号编辑器", "success");
+  } catch (e) {
+    toast("复制失败：" + e.message, "error");
   }
 });
 
@@ -501,6 +515,11 @@ async function init() {
     const themes = await api("/api/themes");
     state.themes = themes;
     $("s3-theme").innerHTML = themes.map((t) => `<option value="${t.key}">${t.name}</option>`).join("");
+  } catch (e) {}
+  try {
+    const tpls = await api("/api/templates");
+    $("s1-template").innerHTML = tpls.map((t) => `<option value="${t.key}">${t.name}</option>`).join("");
+    if (tpls.length) state.template = tpls[0].key;
   } catch (e) {}
 }
 
