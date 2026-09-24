@@ -23,6 +23,8 @@ python -m uvicorn app:app --host 127.0.0.1 --port 8000
 
 浏览器打开 **http://127.0.0.1:8000**。
 
+> 想部署到有固定公网 IP 的服务器（手机/外网访问 + 公众号推送更稳定），见 [DEPLOY.md](DEPLOY.md)，一条命令即可。
+
 ## ⚙️ 配置
 
 所有配置都在网页右上角「设置」里填，保存在本地 `data/config.json`（已加入 `.gitignore`，不会上传）。

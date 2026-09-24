@@ -1,0 +1,2 @@
+# 确保 shell 脚本在 Linux 服务器上始终是 LF 换行，避免 Windows CRLF 导致运行报错
+*.sh text eol=lf
