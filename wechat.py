@@ -33,9 +33,33 @@ def _friendly(data):
     return f"errcode={code} errmsg={data.get('errmsg')}" + (f"（{hint}）" if hint else "")
 
 
-def get_public_ip():
-    """探测本机公网出口 IP（用于配置公众号 IP 白名单）。"""
-    urls = ["http://ip.3322.net", "https://4.ipw.cn", "https://myip.ipip.net"]
+def _is_public_ip(ip):
+    parts = ip.split(".")
+    if len(parts) != 4:
+        return False
+    try:
+        a, b, c, d = (int(x) for x in parts)
+    except ValueError:
+        return False
+    if a == 0 or a >= 224 or a == 10 or a == 127:
+        return False
+    if a == 172 and 16 <= b <= 31:
+        return False
+    if a == 192 and b == 168:
+        return False
+    return True
+
+
+def get_public_ips():
+    """探测本机公网出口 IP（可能有多个，供配置公众号 IP 白名单用）。"""
+    # myip.ipip.net 与微信侧看到的来源 IP 一致，放最前面优先
+    urls = [
+        "https://myip.ipip.net",
+        "http://ip.3322.net",
+        "https://4.ipw.cn",
+        "https://api.ipify.org",
+    ]
+    ips = []
     s = requests.Session()
     s.trust_env = False
     s.proxies = {"http": None, "https": None}
@@ -44,11 +68,11 @@ def get_public_ip():
             r = s.get(u, timeout=8)
             if r.status_code == 200:
                 m = re.search(r'(\d{1,3}\.){3}\d{1,3}', r.text)
-                if m:
-                    return m.group(0)
+                if m and _is_public_ip(m.group(0)) and m.group(0) not in ips:
+                    ips.append(m.group(0))
         except requests.RequestException:
             continue
-    return ""
+    return ips
 
 
 _TOKEN = {"token": None, "expires_at": 0}

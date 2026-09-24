@@ -204,7 +204,7 @@ def test_llm():
 
 @app.get("/api/wechat/ip")
 def wechat_ip():
-    return {"ip": wechat.get_public_ip()}
+    return {"ips": wechat.get_public_ips()}
 
 
 # ---------------- 第 1 步：生成题目 ----------------

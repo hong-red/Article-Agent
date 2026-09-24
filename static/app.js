@@ -559,12 +559,14 @@ $("btn-get-ip").addEventListener("click", async () => {
   input.value = "";
   try {
     const r = await api("/api/wechat/ip");
-    if (r.ip) {
-      input.value = r.ip;
-      try { await navigator.clipboard.writeText(r.ip); toast("已获取并复制本机公网 IP：" + r.ip, "success"); }
-      catch (e) { toast("本机公网 IP：" + r.ip, "success"); }
+    const ips = r.ips || [];
+    if (ips.length) {
+      const text = ips.join("、");
+      input.value = text;
+      try { await navigator.clipboard.writeText(ips[0]); toast("本机公网 IP：" + text + "（已复制第一个）", "success"); }
+      catch (e) { toast("本机公网 IP：" + text, "success"); }
     } else {
-      toast("获取失败，请手动到 ip.3322.net 查询本机公网 IP", "error");
+      toast("获取失败，请手动到 myip.ipip.net 查询本机公网 IP", "error");
     }
   } catch (e) {
     toast("获取失败：" + e.message, "error");
