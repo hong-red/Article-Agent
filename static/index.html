@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>智能精灵 · 公众号文章生成器</title>
+  <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand">🧞 智能精灵 <span class="sub">公众号文章生成器</span></div>
+    <div class="topbar-actions">
+      <button id="btn-library" class="btn ghost">📚 文章库</button>
+      <button id="btn-settings" class="btn ghost">⚙️ 设置</button>
+    </div>
+  </header>
+
+  <div class="stepper" id="stepper">
+    <div class="step active" data-step="1"><span class="dot">1</span>选题</div>
+    <div class="conn"></div>
+    <div class="step" data-step="2"><span class="dot">2</span>成文</div>
+    <div class="conn"></div>
+    <div class="step" data-step="3"><span class="dot">3</span>排版</div>
+  </div>
+
+  <main class="container">
+
+    <!-- ============ 第一步：选题 ============ -->
+    <section id="step-1" class="panel">
+      <h2>第一步 · 定主题，选题目</h2>
+      <div class="form-row">
+        <label>文章主题 / 关键词 <em>*</em></label>
+        <textarea id="s1-topic" rows="3" placeholder="例如：如何高效学习 Python"></textarea>
+      </div>
+      <div class="form-grid">
+        <div class="form-row">
+          <label>风格倾向（可选）</label>
+          <input id="s1-style" placeholder="例如：轻松幽默 / 专业严谨 / 干货向">
+        </div>
+        <div class="form-row">
+          <label>补充说明（可选）</label>
+          <input id="s1-extra" placeholder="例如：面向零基础读者">
+        </div>
+        <div class="form-row">
+          <label>生成数量</label>
+          <select id="s1-count">
+            <option>3</option>
+            <option selected>5</option>
+            <option>8</option>
+          </select>
+        </div>
+      </div>
+      <div class="actions">
+        <button id="btn-gen-titles" class="btn primary">✨ 生成题目</button>
+      </div>
+      <div id="titles-box" class="titles-box"></div>
+      <div class="actions step-nav">
+        <button id="btn-to-step2" class="btn primary" disabled>下一步：生成正文 →</button>
+      </div>
+    </section>
+
+    <!-- ============ 第二步：成文 ============ -->
+    <section id="step-2" class="panel hidden">
+      <h2>第二步 · 生成正文（可反复调试）</h2>
+      <div class="summary-line" id="s2-topic"></div>
+      <div class="form-row">
+        <label>文章标题</label>
+        <input id="s2-title" placeholder="标题">
+      </div>
+      <div class="actions">
+        <button id="btn-gen-content" class="btn primary">✍️ 生成正文</button>
+      </div>
+      <div class="split">
+        <div class="form-row">
+          <label>正文（Markdown，可直接编辑）</label>
+          <textarea id="s2-md" rows="22" placeholder="生成后的正文会显示在这里，可直接编辑"></textarea>
+        </div>
+        <div class="form-row">
+          <label>预览</label>
+          <div id="s2-preview" class="preview"><p class="muted">正文预览区</p></div>
+        </div>
+      </div>
+      <div class="debug-box">
+        <input id="s2-feedback" placeholder="调试意见，例如：开头更吸引人一点 / 语气再活泼些 / 加一个小结">
+        <button id="btn-refine" class="btn">🔄 按意见重新生成</button>
+      </div>
+      <div class="actions step-nav">
+        <button class="btn ghost" data-goto="1">← 上一步</button>
+        <button id="btn-to-step3" class="btn primary">下一步：格式优化 →</button>
+      </div>
+    </section>
+
+    <!-- ============ 第三步：排版 ============ -->
+    <section id="step-3" class="panel hidden">
+      <h2>第三步 · 格式优化 + 美化</h2>
+      <div class="form-grid">
+        <div class="form-row">
+          <label>配色方案</label>
+          <select id="s3-theme"></select>
+        </div>
+        <div class="form-row">
+          <label>语气</label>
+          <select id="s3-tone">
+            <option value="">保持不变</option>
+            <option>正式专业</option>
+            <option>轻松活泼</option>
+            <option>温暖治愈</option>
+            <option>犀利观点</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-row toggles">
+        <label><input type="checkbox" id="s3-polish" checked> 智能排版润色（优化层级/重点）</label>
+        <label><input type="checkbox" id="s3-summary"> 加导语摘要</label>
+        <label><input type="checkbox" id="s3-golden"> 提炼金句</label>
+        <label><input type="checkbox" id="s3-follow"> 结尾引导关注</label>
+      </div>
+      <div class="actions">
+        <button id="btn-format" class="btn primary">🎨 格式优化</button>
+      </div>
+      <div class="split">
+        <div class="form-row">
+          <label>正文（Markdown）</label>
+          <textarea id="s3-md" rows="22"></textarea>
+        </div>
+        <div class="form-row">
+          <label>预览</label>
+          <div id="s3-preview" class="preview"></div>
+        </div>
+      </div>
+      <div class="form-row">
+        <label>封面图（可选，不传则用默认封面）</label>
+        <input type="file" id="s3-cover" accept="image/*">
+        <div id="s3-cover-preview" class="cover-preview"></div>
+      </div>
+      <div class="actions step-nav">
+        <button class="btn ghost" data-goto="2">← 上一步</button>
+        <button id="btn-save" class="btn primary">💾 保存到本地库</button>
+        <button id="btn-push" class="btn accent">🚀 推送到草稿箱</button>
+      </div>
+    </section>
+  </main>
+
+  <!-- ============ 设置弹窗 ============ -->
+  <div id="modal-settings" class="modal-mask hidden">
+    <div class="modal">
+      <div class="modal-head">
+        <h3>设置</h3>
+        <button class="icon-btn" data-close="modal-settings">✕</button>
+      </div>
+      <div class="modal-body">
+        <fieldset>
+          <legend>DeepSeek（内容生成）</legend>
+          <div class="form-row">
+            <label>API Key</label>
+            <input id="cfg-key" type="password" placeholder="sk-...">
+          </div>
+          <div class="form-row">
+            <label>模型</label>
+            <select id="cfg-model">
+              <option value="deepseek-chat">deepseek-chat（推荐，速度快）</option>
+              <option value="deepseek-reasoner">deepseek-reasoner（推理更强）</option>
+            </select>
+          </div>
+          <button id="btn-test-llm" class="btn ghost small">测试连接</button>
+          <span id="llm-test-result" class="hint"></span>
+        </fieldset>
+        <fieldset>
+          <legend>微信公众号（推送到草稿箱，可选）</legend>
+          <div class="form-row">
+            <label>AppID</label>
+            <input id="cfg-appid" placeholder="wx...">
+          </div>
+          <div class="form-row">
+            <label>AppSecret</label>
+            <input id="cfg-secret" type="password" placeholder="...">
+          </div>
+          <div class="form-row">
+            <label>作者名（可选）</label>
+            <input id="cfg-author" placeholder="显示在文章里的作者">
+          </div>
+          <div class="form-row">
+            <label>原文链接（可选）</label>
+            <input id="cfg-source-url" placeholder="https://...">
+          </div>
+          <div class="form-row toggles">
+            <label><input type="checkbox" id="cfg-comment"> 开启评论</label>
+            <label><input type="checkbox" id="cfg-fans-comment"> 仅粉丝可评论</label>
+          </div>
+          <p class="hint">提示：草稿推送需要「认证公众号」的 AppID/AppSecret，且需要一张封面图。</p>
+        </fieldset>
+      </div>
+      <div class="modal-foot">
+        <button id="btn-save-config" class="btn primary">保存设置</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ 文章库弹窗 ============ -->
+  <div id="modal-library" class="modal-mask hidden">
+    <div class="modal wide">
+      <div class="modal-head">
+        <h3>本地文章库</h3>
+        <button class="icon-btn" data-close="modal-library">✕</button>
+      </div>
+      <div class="modal-body">
+        <div id="library-list" class="library-list"></div>
+      </div>
+    </div>
+  </div>
+
+  <div id="toast" class="toast hidden"></div>
+
+  <script src="/static/app.js"></script>
+</body>
+</html>

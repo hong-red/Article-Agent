@@ -1,0 +1,385 @@
+"""智能精灵 · 公众号文章自动生成器 —— FastAPI 后端。
+
+三步生成：
+  ① 主题 -> 生成题目 -> 选择
+  ② 题目 -> 生成正文 -> 可反复调试
+  ③ 正文 -> 格式优化 + 自定义美化 -> 预览
+可选：推送到个人公众号草稿箱（需自行配置 AppID / AppSecret）。
+"""
+import os
+import re
+
+from fastapi import FastAPI, HTTPException, UploadFile, File
+from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import FileResponse
+from fastapi.staticfiles import StaticFiles
+from pydantic import BaseModel
+
+import config
+import db
+import llm
+import markdown_html as mh
+import wechat
+
+app = FastAPI(title="智能精灵 · 公众号文章生成器")
+
+# 允许跨域，方便以后 APP / 其他前端调用
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
+config.ensure_dirs()
+db.init_db()
+
+BASE_DIR = config.BASE_DIR
+STATIC_DIR = os.path.join(BASE_DIR, "static")
+DEFAULT_COVER = os.path.join(BASE_DIR, "default_cover.jpg")
+
+
+# ---------------- 请求模型 ----------------
+class TitleReq(BaseModel):
+    topic: str
+    count: int = 5
+    style: str = ""
+    extra: str = ""
+
+
+class ContentReq(BaseModel):
+    topic: str
+    title: str
+    style: str = ""
+    extra: str = ""
+    feedback: str = ""
+    previous_content: str = ""
+
+
+class FormatReq(BaseModel):
+    content: str
+    title: str = ""
+    theme: str = "default"
+    tone: str = ""
+    add_summary: bool = False
+    add_golden: bool = False
+    add_follow: bool = False
+    polish: bool = True
+
+
+class RenderReq(BaseModel):
+    content: str
+    title: str = ""
+    theme: str = "default"
+
+
+class ArticleReq(BaseModel):
+    topic: str
+    title: str
+    content_md: str
+    content_html: str = ""
+    cover: str = ""
+    theme: str = "default"
+
+
+# ---------------- 工具 ----------------
+def _cfg():
+    return config.load_config()
+
+
+def _llm(messages, temperature=0.8, max_tokens=4096):
+    c = _cfg()
+    return llm.chat(
+        messages,
+        c["deepseek_api_key"],
+        model=c["deepseek_model"],
+        base_url=c["deepseek_base_url"],
+        temperature=temperature,
+        max_tokens=max_tokens,
+    )
+
+
+def _plain_digest(md, limit=100):
+    text = re.sub(r'[#>*`\-]', '', md)
+    text = re.sub(r'!\[[^\]]*\]\([^)]*\)', '', text)
+    text = re.sub(r'\[([^\]]+)\]\([^)]*\)', r'\1', text)
+    text = re.sub(r'\s+', ' ', text).strip()
+    return text[:limit]
+
+
+def _cover_url(article):
+    cover = article.get("cover") or ""
+    if cover and os.path.exists(cover):
+        name = os.path.basename(cover)
+        return f"/files/{article['id']}/{name}"
+    return ""
+
+
+def _write_article_files(article_id, md, html):
+    d = os.path.join(config.ARTICLES_DIR, str(article_id))
+    os.makedirs(d, exist_ok=True)
+    with open(os.path.join(d, "article.md"), "w", encoding="utf-8") as f:
+        f.write(md)
+    with open(os.path.join(d, "article.html"), "w", encoding="utf-8") as f:
+        f.write(html)
+
+
+# ---------------- 基础 ----------------
+@app.get("/api/health")
+def health():
+    return {"ok": True}
+
+
+@app.get("/api/config")
+def get_config():
+    return _cfg()
+
+
+@app.post("/api/config")
+def set_config(body: dict):
+    return config.save_config(body)
+
+
+@app.get("/api/themes")
+def themes():
+    return mh.list_schemes()
+
+
+@app.post("/api/test/llm")
+def test_llm():
+    try:
+        reply = _llm([{"role": "user", "content": "请只回复两个字：正常"}], max_tokens=16)
+        return {"ok": True, "reply": reply}
+    except llm.LLMError as e:
+        raise HTTPException(status_code=400, detail=str(e))
+
+
+# ---------------- 第 1 步：生成题目 ----------------
+@app.post("/api/generate/titles")
+def generate_titles(req: TitleReq):
+    style_line = f"风格倾向：{req.style}" if req.style else ""
+    extra_line = f"补充说明：{req.extra}" if req.extra else ""
+    user = (
+        f"请为主题「{req.topic}」生成 {req.count} 个吸引人的公众号文章标题。\n"
+        "要求：\n"
+        "1. 有吸引力，包含悬念、利益点或情绪点\n"
+        "2. 符合公众号调性，口语化但不低俗\n"
+        "3. 每个标题 15~25 字\n"
+        "4. 只输出标题，每行一个，不要编号、引号或解释\n"
+        + (style_line + "\n" if style_line else "")
+        + (extra_line + "\n" if extra_line else "")
+    )
+    raw = _llm(
+        [
+            {"role": "system", "content": "你是资深公众号主编，擅长起标题。"},
+            {"role": "user", "content": user},
+        ],
+        temperature=1.0,
+        max_tokens=800,
+    )
+
+    titles = []
+    for line in raw.split("\n"):
+        t = line.strip()
+        t = re.sub(r'^[\d\-\*\.、\)）\s]+', '', t).strip()
+        t = t.strip('「」""\'\'“”')
+        if t and t not in titles:
+            titles.append(t)
+    if not titles:
+        titles = [raw.strip()]
+    return {"titles": titles[: max(req.count, 1)]}
+
+
+# ---------------- 第 2 步：生成正文 ----------------
+@app.post("/api/generate/content")
+def generate_content(req: ContentReq):
+    style_line = f"风格倾向：{req.style}" if req.style else ""
+    extra_line = f"补充说明：{req.extra}" if req.extra else ""
+    feedback_line = (
+        f"【修改要求】{req.feedback}\n请在上面的要求基础上，重点满足这条修改要求。"
+        if req.feedback else ""
+    )
+    previous_line = (
+        f"【上一版内容】\n{req.previous_content}\n请基于这版内容修改，而不是完全重写。"
+        if req.previous_content else ""
+    )
+    user = (
+        f"请根据下面的题目和主题，写一篇结构完整、可读性强、可直接发布的公众号文章。\n\n"
+        f"题目：{req.title}\n"
+        f"主题：{req.topic}\n"
+        + (style_line + "\n" if style_line else "")
+        + (extra_line + "\n" if extra_line else "")
+        + "\n写作要求：\n"
+        "1. 使用 Markdown 格式：小标题用 ##，适当使用列表、加粗、引用\n"
+        "2. 有清晰的开头引入、主体分点、结尾总结\n"
+        "3. 语言自然流畅，像真人写作，避免 AI 腔\n"
+        "4. 篇幅适中（1000~1800 字）\n"
+        + (feedback_line + "\n" if feedback_line else "")
+        + (previous_line + "\n" if previous_line else "")
+    )
+    content = _llm(
+        [
+            {"role": "system", "content": "你是资深公众号写作者，产出可直接发布的文章。"},
+            {"role": "user", "content": user},
+        ],
+        temperature=0.8,
+        max_tokens=4096,
+    )
+    return {"content": content.strip()}
+
+
+# ---------------- 第 3 步：格式优化 ----------------
+@app.post("/api/generate/format")
+def generate_format(req: FormatReq):
+    if req.polish:
+        reqs = []
+        if req.add_summary:
+            reqs.append("- 在正文最前面加一段「导语/摘要」（不超过 60 字，用普通段落）")
+        if req.add_golden:
+            reqs.append("- 提炼 1~3 句金句，用加粗或引用块突出")
+        if req.add_follow:
+            reqs.append("- 在结尾加一段自然的「引导关注」语")
+        if req.tone:
+            reqs.append(f"- 整体语气调整为：{req.tone}")
+        if not reqs:
+            reqs.append("- 优化小标题层级、段落节奏，让重点更突出")
+        reqs.append("- 保持原意和事实不变，不新增虚假信息")
+        user = (
+            "请对下面的文章进行格式优化与润色，只输出优化后的 Markdown 正文，不要多余解释。\n"
+            "优化要求：\n" + "\n".join(reqs) + "\n\n【原文】\n" + req.content
+        )
+        md = _llm(
+            [
+                {"role": "system", "content": "你是公众号排版专家，擅长把文章优化得更有层次、更易读。"},
+                {"role": "user", "content": user},
+            ],
+            temperature=0.6,
+            max_tokens=4096,
+        ).strip()
+    else:
+        md = req.content
+
+    html = mh.render_full(req.title, md, req.theme)
+    return {"content": md, "html": html}
+
+
+# ---------------- 渲染（无 LLM，实时预览用） ----------------
+@app.post("/api/render")
+def render(req: RenderReq):
+    return {"html": mh.render_full(req.title, req.content, req.theme)}
+
+
+# ---------------- 本地库 CRUD ----------------
+@app.get("/api/articles")
+def list_articles():
+    articles = db.list_articles()
+    for a in articles:
+        a["cover_url"] = _cover_url(db.get_article(a["id"]))
+    return articles
+
+
+@app.post("/api/articles")
+def create_article(req: ArticleReq):
+    html = req.content_html or mh.render_full(req.title, req.content_md, req.theme)
+    article_id = db.insert_article(req.topic, req.title, req.content_md, html, req.cover, req.theme)
+    _write_article_files(article_id, req.content_md, html)
+    return {"id": article_id}
+
+
+@app.get("/api/articles/{article_id}")
+def get_article(article_id: int):
+    a = db.get_article(article_id)
+    if not a:
+        raise HTTPException(status_code=404, detail="文章不存在")
+    a["cover_url"] = _cover_url(a)
+    return a
+
+
+@app.put("/api/articles/{article_id}")
+def update_article(article_id: int, req: ArticleReq):
+    a = db.get_article(article_id)
+    if not a:
+        raise HTTPException(status_code=404, detail="文章不存在")
+    html = req.content_html or mh.render_full(req.title, req.content_md, req.theme)
+    db.update_article(
+        article_id,
+        topic=req.topic,
+        title=req.title,
+        content_md=req.content_md,
+        content_html=html,
+        cover=req.cover,
+        theme=req.theme,
+    )
+    _write_article_files(article_id, req.content_md, html)
+    return {"id": article_id}
+
+
+@app.delete("/api/articles/{article_id}")
+def delete_article(article_id: int):
+    db.delete_article(article_id)
+    return {"ok": True}
+
+
+@app.post("/api/articles/{article_id}/cover")
+async def upload_cover(article_id: int, file: UploadFile = File(...)):
+    a = db.get_article(article_id)
+    if not a:
+        raise HTTPException(status_code=404, detail="文章不存在")
+    ext = os.path.splitext(file.filename or "cover.jpg")[1].lower() or ".jpg"
+    if ext not in (".jpg", ".jpeg", ".png", ".gif", ".webp"):
+        ext = ".jpg"
+    d = os.path.join(config.ARTICLES_DIR, str(article_id))
+    os.makedirs(d, exist_ok=True)
+    path = os.path.join(d, f"cover{ext}")
+    data = await file.read()
+    with open(path, "wb") as f:
+        f.write(data)
+    db.update_article(article_id, cover=path)
+    return {"ok": True, "cover_url": f"/files/{article_id}/cover{ext}"}
+
+
+# ---------------- 推送草稿箱（可选） ----------------
+@app.post("/api/articles/{article_id}/push")
+def push_draft(article_id: int):
+    article = db.get_article(article_id)
+    if not article:
+        raise HTTPException(status_code=404, detail="文章不存在")
+    c = _cfg()
+
+    cover = article.get("cover") or ""
+    if not cover or not os.path.exists(cover):
+        if os.path.exists(DEFAULT_COVER):
+            cover = DEFAULT_COVER
+        else:
+            raise HTTPException(status_code=400, detail="缺少封面图，请先在第 3 步上传封面。")
+
+    try:
+        thumb = wechat.upload_thumb(c["wechat_appid"], c["wechat_appsecret"], cover)
+        html = article["content_html"] or mh.render_full(
+            article["title"], article["content_md"], article["theme"]
+        )
+        draft = {
+            "title": article["title"],
+            "author": c.get("wechat_author", ""),
+            "digest": _plain_digest(article["content_md"]),
+            "content": html,
+            "content_source_url": c.get("wechat_source_url", ""),
+            "thumb_media_id": thumb,
+            "need_open_comment": int(c.get("wechat_need_open_comment", 0) or 0),
+            "only_fans_can_comment": int(c.get("wechat_only_fans_can_comment", 0) or 0),
+        }
+        media_id = wechat.add_draft(c["wechat_appid"], c["wechat_appsecret"], draft)
+        db.update_article(article_id, status="pushed")
+        return {"ok": True, "draft_media_id": media_id}
+    except wechat.WeChatError as e:
+        raise HTTPException(status_code=400, detail=str(e))
+
+
+# ---------------- 静态资源 ----------------
+@app.get("/")
+def index():
+    return FileResponse(os.path.join(STATIC_DIR, "index.html"))
+
+
+app.mount("/static", StaticFiles(directory=STATIC_DIR), name="static")
+app.mount("/files", StaticFiles(directory=config.ARTICLES_DIR), name="files")
