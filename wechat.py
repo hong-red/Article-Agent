@@ -59,6 +59,23 @@ def upload_thumb(appid, appsecret, file_path):
     return data["media_id"]
 
 
+def upload_image(appid, appsecret, file_path):
+    """上传正文配图为永久素材，返回图片 url（用于正文 <img> 引用）。"""
+    token = get_access_token(appid, appsecret)
+    url = f"https://api.weixin.qq.com/cgi-bin/material/add_material?access_token={token}&type=image"
+    with open(file_path, "rb") as f:
+        files = {"media": (file_path.replace("\\", "/").rsplit("/", 1)[-1], f, "image/jpeg")}
+        try:
+            resp = requests.post(url, files=files, timeout=60)
+        except requests.RequestException as e:
+            raise WeChatError(f"上传正文配图失败：{e}")
+
+    data = resp.json()
+    if "url" not in data:
+        raise WeChatError(f"上传正文配图失败：errcode={data.get('errcode')} errmsg={data.get('errmsg')}")
+    return data["url"]
+
+
 def add_draft(appid, appsecret, article):
     """article: {title, author, digest, content, content_source_url, thumb_media_id, ...}"""
     if not article.get("thumb_media_id"):

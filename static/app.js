@@ -345,15 +345,30 @@ async function useWeb(i) {
   }
 }
 
-$("btn-to-step4").addEventListener("click", () => {
-  let md = state.contentMd.trimEnd();
-  if (state.selectedImages.length) {
-    const imgs = state.selectedImages.map((s) => `![${s.name}](${s.url})`).join("\n");
-    md = md + "\n\n" + imgs;
+function fullContentMd() {
+  let md = $("s3-md").value || state.contentMd || "";
+  const pending = state.selectedImages.filter((s) => !md.includes(s.url));
+  if (pending.length) {
+    md = md.trimEnd() + "\n\n" + pending.map((s) => `![${s.name}](${s.url})`).join("\n");
   }
-  state.contentMd = md;
-  $("s3-md").value = md;
-  renderPreview(md, state.title, "s3-preview", state.theme);
+  return md;
+}
+
+function updateImgNote() {
+  const note = $("s4-img-note");
+  if (!note) return;
+  if (state.selectedImages.length) {
+    note.innerHTML = `已选 <b>${state.selectedImages.length}</b> 张配图，点击「格式优化」将智能插入到正文对应位置；未优化时会先附在文末。`;
+    note.classList.remove("hidden");
+  } else {
+    note.classList.add("hidden");
+  }
+}
+
+$("btn-to-step4").addEventListener("click", () => {
+  $("s3-md").value = state.contentMd;
+  renderPreview(fullContentMd(), state.title, "s3-preview", state.theme);
+  updateImgNote();
   goTo(4);
 });
 
@@ -372,11 +387,14 @@ $("btn-format").addEventListener("click", async () => {
       add_golden: $("s3-golden").checked,
       add_follow: $("s3-follow").checked,
       polish: $("s3-polish").checked,
+      images: state.selectedImages.map((s) => ({ url: s.url, alt: s.name })),
     });
     state.contentMd = r.content;
     state.contentHtml = r.html;
+    state.selectedImages = [];
     $("s3-md").value = r.content;
     $("s3-preview").innerHTML = r.html;
+    updateImgNote();
     toast("格式优化完成", "success");
   } catch (e) {
     toast(e.message, "error");
@@ -386,7 +404,7 @@ $("btn-format").addEventListener("click", async () => {
 });
 
 $("btn-copy-html").addEventListener("click", async () => {
-  const md = $("s3-md").value;
+  const md = fullContentMd();
   const title = $("s2-title").value.trim();
   if (!md.trim()) { toast("正文为空", "error"); return; }
   try {
@@ -400,12 +418,12 @@ $("btn-copy-html").addEventListener("click", async () => {
 
 $("s3-theme").addEventListener("change", () => {
   state.theme = $("s3-theme").value;
-  renderPreview($("s3-md").value, state.title, "s3-preview", state.theme);
+  renderPreview(fullContentMd(), state.title, "s3-preview", state.theme);
 });
 $("s3-tone").addEventListener("change", () => { state.tone = $("s3-tone").value; });
 $("s3-md").addEventListener("input", debounce(() => {
   state.contentMd = $("s3-md").value;
-  renderPreview(state.contentMd, state.title, "s3-preview", state.theme);
+  renderPreview(fullContentMd(), state.title, "s3-preview", state.theme);
 }, 500));
 
 $("s3-cover").addEventListener("change", () => {
@@ -419,12 +437,12 @@ $("s3-cover").addEventListener("change", () => {
 async function saveArticle() {
   const body = {
     topic: state.topic, title: state.title || $("s2-title").value.trim(),
-    content_md: state.contentMd || $("s3-md").value,
-    content_html: state.contentHtml || "",
+    content_md: fullContentMd(),
+    content_html: "",
     theme: state.theme, cover: "",
   };
   if (!body.title) throw new Error("缺少文章标题");
-  if (!body.content_md) throw new Error("正文为空");
+  if (!body.content_md.trim()) throw new Error("正文为空");
 
   let r;
   if (state.articleId) {
@@ -583,6 +601,7 @@ async function loadArticle(id) {
     state.selectedImages = [];
     closeModal("modal-library");
     goTo(4);
+    updateImgNote();
     toast("已载入文章", "success");
   } catch (e) { toast(e.message, "error"); }
 }

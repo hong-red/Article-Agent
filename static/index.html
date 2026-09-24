@@ -99,7 +99,7 @@
     <!-- 第三步 -->
     <section id="step-3" class="panel hidden">
       <h2>第三步 · 选图配图</h2>
-      <p class="hint">为文章挑选配图：本地上传或全网搜索，选中的图片会插入到正文末尾（可在下一步的正文里调整位置）。</p>
+      <p class="hint">为文章挑选配图：本地上传或全网搜索，选中的图片会在下一步「排版」时由 AI 智能插入到正文对应位置。</p>
       <div class="tabs">
         <button class="tab active" data-imgtab="local">本地上传</button>
         <button class="tab" data-imgtab="web">全网搜索</button>
@@ -152,6 +152,7 @@
         <label><input type="checkbox" id="s3-golden"> 提炼金句</label>
         <label><input type="checkbox" id="s3-follow"> 结尾引导关注</label>
       </div>
+      <div id="s4-img-note" class="hint hidden"></div>
       <div class="actions">
         <button id="btn-format" class="btn primary">格式优化</button>
         <button id="btn-copy-html" class="btn ghost">复制 HTML</button>

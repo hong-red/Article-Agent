@@ -71,6 +71,7 @@ class FormatReq(BaseModel):
     add_follow: bool = False
     polish: bool = True
     template: str = "general"
+    images: list = []  # [{url, alt}] 待插入正文的配图
 
 
 class RenderReq(BaseModel):
@@ -281,10 +282,31 @@ def generate_content(req: ContentReq):
     return {"content": content.strip()}
 
 
-# ---------------- 第 3 步：格式优化 ----------------
+# ---------------- 第 4 步：格式优化 ----------------
+def _image_refs(images):
+    """把前端传来的图片清单规范化成 [{url, alt}]。"""
+    out = []
+    for i in images or []:
+        if isinstance(i, dict) and i.get("url"):
+            out.append({
+                "url": i["url"],
+                "alt": (i.get("alt") or i.get("name") or "配图").strip() or "配图",
+            })
+    return out
+
+
+def _ensure_images(md, images):
+    """保证每张图都出现在正文里；缺失的补到末尾。"""
+    for img in images:
+        if img["url"] and img["url"] not in md:
+            md = md.rstrip() + f"\n\n![{img['alt']}]({img['url']})"
+    return md
+
+
 @app.post("/api/generate/format")
 def generate_format(req: FormatReq):
     tpl = TEMPLATES.get(req.template, TEMPLATES["general"])
+    images = _image_refs(req.images)
     if req.polish:
         reqs = []
         if req.add_summary:
@@ -297,6 +319,12 @@ def generate_format(req: FormatReq):
             reqs.append(f"- 整体语气调整为：{req.tone}")
         if tpl.get("format"):
             reqs.append(tpl["format"])
+        if images:
+            img_desc = "\n".join(f"{i + 1}. {img['alt']}：{img['url']}" for i, img in enumerate(images))
+            reqs.append(
+                "把下面的配图插入到正文中与内容最相关的位置（每张图放在相关段落/小节附近，"
+                "用 Markdown 图片语法，图片地址必须原样保留、不得改动）：\n" + img_desc
+            )
         if not reqs:
             reqs.append("- 优化小标题层级、段落节奏，让重点更突出")
         reqs.append("- 保持原意和事实不变，不新增虚假信息")
@@ -315,6 +343,7 @@ def generate_format(req: FormatReq):
     else:
         md = req.content
 
+    md = _ensure_images(md, images)
     html = mh.render_full(req.title, md, req.theme)
     return {"content": md, "html": html}
 
@@ -395,6 +424,36 @@ async def upload_cover(article_id: int, file: UploadFile = File(...)):
 
 
 # ---------------- 推送草稿箱（可选） ----------------
+_IMG_TAG_RE = re.compile(r'<img\s+[^>]*>')
+_SRC_RE = re.compile(r'src="([^"]+)"')
+
+
+def _resolve_wechat_images(appid, appsecret, html):
+    """把正文里引用本地 /images/ 的 <img> 上传到微信永久素材，换成微信图片地址。"""
+    def repl(tag):
+        m = _SRC_RE.search(tag.group(0))
+        if not m:
+            return tag.group(0)
+        src = m.group(1)
+        name = os.path.basename(src.split("?")[0].rstrip("/"))
+        local = os.path.join(IMAGES_DIR, name)
+        if not os.path.exists(local):
+            return tag.group(0)
+        try:
+            wechat_url = wechat.upload_image(appid, appsecret, local)
+        except wechat.WeChatError:
+            return tag.group(0)
+        if not wechat_url:
+            return tag.group(0)
+        attrs = tag.group(0)
+        if 'data-src="' in attrs:
+            attrs = attrs.replace(m.group(0), f'src="{wechat_url}"')
+        else:
+            attrs = attrs.replace(m.group(0), f'data-src="{wechat_url}" src="{wechat_url}"')
+        return attrs
+    return _IMG_TAG_RE.sub(repl, html)
+
+
 @app.post("/api/articles/{article_id}/push")
 def push_draft(article_id: int):
     article = db.get_article(article_id)
@@ -407,13 +466,14 @@ def push_draft(article_id: int):
         if os.path.exists(DEFAULT_COVER):
             cover = DEFAULT_COVER
         else:
-            raise HTTPException(status_code=400, detail="缺少封面图，请先在第 3 步上传封面。")
+            raise HTTPException(status_code=400, detail="缺少封面图，请先在第 4 步上传封面。")
 
     try:
         thumb = wechat.upload_thumb(c["wechat_appid"], c["wechat_appsecret"], cover)
         html = article["content_html"] or mh.render_full(
             article["title"], article["content_md"], article["theme"]
         )
+        html = _resolve_wechat_images(c["wechat_appid"], c["wechat_appsecret"], html)
         draft = {
             "title": article["title"],
             "author": c.get("wechat_author", ""),
