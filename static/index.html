@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>智能精灵 · 公众号文章生成器</title>
-  <link rel="stylesheet" href="/static/style.css">
+  <link rel="stylesheet" href="static/style.css">
 </head>
 <body>
   <header class="topbar">
@@ -191,6 +191,18 @@
       </div>
       <div class="modal-body">
         <fieldset>
+          <legend>连接（自部署后端）</legend>
+          <div class="form-row">
+            <label>后端地址</label>
+            <input id="cfg-api-base" placeholder="留空 = 同源；例如 http://1.2.3.4:8000">
+          </div>
+          <div class="form-row">
+            <label>访问口令（后端设置了才填）</label>
+            <input id="cfg-access-password" type="password" placeholder="与后端 access_password 一致">
+          </div>
+          <p class="hint">前端可托管在 GitHub Pages，这里填你自己的后端地址即可；口令用于保护你自己的后端 API。</p>
+        </fieldset>
+        <fieldset>
           <legend>DeepSeek（内容生成）</legend>
           <div class="form-row">
             <label>API Key</label>
@@ -273,6 +285,6 @@
 
   <div id="toast" class="toast hidden"></div>
 
-  <script src="/static/app.js"></script>
+  <script src="static/app.js"></script>
 </body>
 </html>

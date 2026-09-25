@@ -1,67 +1,74 @@
 # 智能精灵 · 公众号文章生成器
 
-四步生成公众号文章的本地网页工具：**选题 → 成文 → 选图 → 排版**，支持一键推送到个人公众号草稿箱（可选）。
+四步生成公众号文章的网页工具：**选题 → 成文 → 选图 → 排版**，支持一键推送到个人公众号草稿箱（可选）。
+
+> 网页版面向**技术用户**：自己部署、自己填密钥、数据全在自己机器。一条命令部署，部署完自动告诉你「白名单 IP 是多少」。
 
 ## ✨ 功能
 
 1. **选题**：输入主题 → DeepSeek 生成多个标题 → 挑选一个
 2. **成文**：按标题生成正文，可反复提修改意见迭代（`开头更吸引人` / `语气再活泼些` …）
 3. **选图**：本地上传 / 全网搜索（必应图片）挑选配图，选中的图会在排版步骤智能插入正文对应位置
-4. **排版**：格式优化 + 自定义美化（配色方案、语气、导语摘要、金句、引导关注）+ AI 智能配图插位
+4. **排版**：格式优化 + 自定义美化（配色、语气、导语摘要、金句、引导关注）+ AI 智能配图插位
 5. **本地库**：SQLite 存记录，Markdown / HTML 存本地文件
 6. **推送草稿箱**（可选）：前端自行配置公众号 AppID / AppSecret，一键推到草稿箱
 
-## 🚀 快速开始
+## 🚀 一键部署（自己挂后端）
+
+在一台**有固定公网 IP** 的服务器上执行：
 
 ```bash
-# 1. 安装依赖
-pip install -r requirements.txt
-
-# 2. 启动（或直接双击 run.bat）
-python -m uvicorn app:app --host 127.0.0.1 --port 8000
+bash <(curl -fsSL https://raw.githubusercontent.com/hong-red/Article-Agent/main/deploy/deploy.sh)
 ```
 
-浏览器打开 **http://127.0.0.1:8000**。
+脚本会自动：装依赖 → 拉代码 → 建虚拟环境 → 注册 systemd 服务并启动，**最后打印你的「白名单 IP」**。
 
-> 想部署到有固定公网 IP 的服务器（手机/外网访问 + 公众号推送更稳定），见 [DEPLOY.md](DEPLOY.md)，一条命令即可。
+```text
+★ 你的白名单 IP = 1.2.3.4
+  把它加入公众号「IP 白名单」：mp.weixin.qq.com → 设置与开发 → 基本配置 → IP白名单
+```
+
+> 可选：`PORT=8080 ACCESS_PASSWORD=你的口令 bash deploy.sh`（设端口 / 给 API 加访问口令）。
+
+部署后打开 `http://<服务器公网IP>:8000`，右上角「设置」里填你自己的 **DeepSeek API Key** 和公众号 **AppID / AppSecret**。
+
+## 🌐 前端挂 GitHub Pages（可选）
+
+前端是纯静态页面，也可以直接托管到 GitHub Pages，后端仍然自己挂：
+
+1. 仓库 `Settings → Pages → Source` 选 `GitHub Actions`（本仓库已带 `.github/workflows/pages.yml`，push `static/` 后自动发布）。
+2. 打开 Pages 地址 → 右上角「设置」→「后端地址」填你自己的 `http://<你的IP>:8000`。
+
+这样前端在 GitHub 上、数据在后端你自己的机器，**不需要任何人提供服务器**。
+
+## 🔐 鉴权
+
+后端支持一个简单的**访问口令**（`access_password`）：
+
+- 部署时 `ACCESS_PASSWORD=xxx bash deploy.sh` 设置；
+- 前端「设置 → 访问口令」填同一个即可（存浏览器 localStorage，随每个请求发送）。
+
+适合自己部署的场景，防陌生人访问你的 API（里面有密钥、能触发生成和推送）。
 
 ## ⚙️ 配置
 
-所有配置都在网页右上角「设置」里填，保存在本地 `data/config.json`（已加入 `.gitignore`，不会上传）。
+所有配置在网页右上角「设置」里填，保存在本地 `data/config.json`（已 `.gitignore`，不上传）。
 
 | 配置项 | 说明 |
 | --- | --- |
+| 后端地址 | 连哪个后端；留空 = 同源，填 `http://IP:8000` = 连远程后端 |
+| 访问口令 | 后端设置了 `access_password` 时填写 |
 | DeepSeek API Key | 内容生成用，必填 |
 | DeepSeek 模型 | `deepseek-chat`（快）/ `deepseek-reasoner`（推理强） |
 | 公众号 AppID / AppSecret | 推送到草稿箱用，可选 |
-| 作者名 / 原文链接 | 推送草稿时写入，可选 |
 
 ## 🔐 推送前必读：公众号 IP 白名单
 
-微信草稿箱接口会校验**调用方公网 IP**，没加白名单会报错：`errcode=40164 invalid ip <你的IP> not in whitelist`。
+微信草稿箱接口会校验**调用方公网 IP**，没加白名单会报错 `errcode=40164 invalid ip ... not in whitelist`。
 
-### 第 1 步 · 找到要加的 IP
-
-- 打开本工具网页 → 右上角「设置」→ 点「**获取本机公网IP**」，会列出本机所有出口 IP 并自动复制第一个。
-- 或手动访问 [myip.ipip.net](https://myip.ipip.net) 查看。
-
-> ⚠️ 有些网络（双出口 / 多出口 / 负载均衡）会有**多个公网 IP**，而且不同时刻可能不一样。建议把列出的 IP **全部**加进白名单。
-
-### 第 2 步 · 加入白名单
-
-1. 登录 [微信公众平台](https://mp.weixin.qq.com/)
-2. 左侧「设置与开发」→「基本配置」→ 页面下方「IP白名单」
-3. 点「修改」，把上一步拿到的 IP 逐行填入、保存（一般 1 分钟内生效）
-
-### 第 3 步 · 为什么 IP 要「固定」
-
-白名单绑定的就是公网 IP。**普通家用宽带的公网 IP 通常不是固定的**——重启光猫/路由器、或运营商重新分配后 IP 会变，白名单就失效了。想稳定推送，任选其一：
-
-- 向宽带运营商申请**固定公网 IP**（部分运营商免费/收费提供）；
-- 把程序部署到**有固定公网 IP 的服务器**上；
-- 每次 IP 变了，重新点「获取本机公网IP」并更新白名单。
-
-> 若使用代理 / VPN，微信看到的是**代理的出口 IP**，需要把代理出口 IP 也加进白名单（或推送时关掉代理）。
+1. 部署脚本结束时打印的 `★ 你的白名单 IP`，就是你要加的 IP（服务器出口公网 IP，固定不变）。
+2. 加入白名单：`mp.weixin.qq.com` → 设置与开发 → 基本配置 → IP 白名单 → 修改 → 填入该 IP。
+3. 家宽公网 IP 多为动态（会变），所以推荐部署到有**固定公网 IP 的服务器**，一次配置长期有效。
 
 ## 📂 项目结构
 
@@ -72,10 +79,11 @@ python -m uvicorn app:app --host 127.0.0.1 --port 8000
 ├── imagesearch.py      # 全网图片搜索（必应，无需 Key）+ 图片下载
 ├── wechat.py           # 公众号草稿箱推送（access_token / 素材上传 / draft/add）
 ├── db.py               # SQLite 本地库
-├── config.py           # 配置读写
-├── static/             # 网页前端（原生 HTML/CSS/JS）
-├── data/               # 本地库 + 生成文件（gitignore）
-└── run.bat             # Windows 一键启动
+├── config.py           # 配置读写（含 access_password 访问口令）
+├── static/             # 网页前端（原生 HTML/CSS/JS，可独立托管到 GitHub Pages）
+├── deploy/deploy.sh    # 一键部署脚本（部署完打印白名单 IP）
+├── .github/workflows/  # GitHub Pages 发布工作流
+└── data/               # 本地库 + 生成文件（gitignore）
 ```
 
 ## 🔌 API 一览
@@ -90,12 +98,12 @@ python -m uvicorn app:app --host 127.0.0.1 --port 8000
 | POST | `/api/articles/{id}/cover` | 上传封面图 |
 | POST | `/api/articles/{id}/push` | 推送到草稿箱 |
 | GET/POST | `/api/images` | 图片库：列出 / 上传图片 |
-| DELETE | `/api/images/{name}` | 删除图片 |
 | POST | `/api/images/search` | 全网搜索图片（必应） |
 | POST | `/api/images/fetch` | 下载网络图片到本地 |
 | GET/POST | `/api/config` | 读取 / 保存设置 |
-| POST | `/api/test/llm` | 测试 DeepSeek 连接 |
+| GET | `/api/wechat/ip` | 获取本机出口公网 IP |
+| GET | `/api/health` | 健康检查（无需口令） |
 
 ## 📱 后续
 
-网页版为第一版，后端已做成 REST API 并开启 CORS，后续可直接套 APP 复用同一套接口。
+网页版为第一版，后端已做成 REST API 并开启 CORS，后续 App 可直接复用同一套接口。App（面向小白的托管版）单独开仓库，带登录 / 密钥加密 / 数据导出 / 邀请制。

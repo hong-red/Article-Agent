@@ -22,6 +22,8 @@ DEFAULT_CONFIG = {
     # 是否开启评论
     "wechat_need_open_comment": 0,
     "wechat_only_fans_can_comment": 0,
+    # 访问口令：设置后，所有 /api/* 请求需带 X-Access-Password 头（简单鉴权，防止陌生人访问）
+    "access_password": "",
 }
 
 

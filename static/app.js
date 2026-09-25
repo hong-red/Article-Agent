@@ -1,6 +1,16 @@
 /* 智能精灵 · 公众号文章生成器 —— 前端逻辑 */
 const $ = (id) => document.getElementById(id);
 
+/* 后端地址 + 访问口令：存浏览器 localStorage，可连任意自部署后端（默认同源） */
+let API_BASE = localStorage.getItem("api_base") || "";
+let ACCESS_PASSWORD = localStorage.getItem("access_password") || "";
+
+function absUrl(u) {
+  if (!u) return u;
+  if (/^(https?:)?\/\//.test(u) || u.startsWith("data:") || u.startsWith("blob:")) return u;
+  return API_BASE + u;
+}
+
 const state = {
   step: 1,
   topic: "", style: "", extra: "", template: "general",
@@ -21,7 +31,9 @@ const state = {
 
 /* ---------- 基础 ---------- */
 async function api(path, opts = {}) {
-  const res = await fetch(path, opts);
+  const headers = Object.assign({}, opts.headers || {});
+  if (ACCESS_PASSWORD) headers["X-Access-Password"] = ACCESS_PASSWORD;
+  const res = await fetch(API_BASE + path, { ...opts, headers });
   let data = null;
   try { data = await res.json(); } catch (e) {}
   if (!res.ok) {
@@ -204,7 +216,7 @@ async function loadLocalImages() {
   grid.innerHTML = '<p class="muted">加载中…</p>';
   try {
     const items = await api("/api/images");
-    state.localImages = items;
+    state.localImages = items.map((it) => ({ ...it, url: absUrl(it.url) }));
     renderLocalGrid();
   } catch (e) {
     grid.innerHTML = `<p class="muted">加载失败：${escapeHtml(e.message)}</p>`;
@@ -336,7 +348,7 @@ async function useWeb(i) {
   toast("正在下载图片…", "info");
   try {
     const r = await post("/api/images/fetch", { url: img.url, thumb: img.thumb, page: img.page });
-    state.selectedImages.push({ key: img.url, url: r.url, name: img.title || r.name });
+    state.selectedImages.push({ key: img.url, url: absUrl(r.url), name: img.title || r.name });
     renderWebGrid();
     renderSelected();
     toast("图片已加入", "success");
@@ -460,7 +472,7 @@ async function uploadCoverIfNeeded(id) {
   const fd = new FormData();
   fd.append("file", f);
   const r = await api(`/api/articles/${id}/cover`, { method: "POST", body: fd });
-  state.coverUrl = r.cover_url;
+  state.coverUrl = absUrl(r.cover_url);
 }
 
 $("btn-save").addEventListener("click", async () => {
@@ -506,6 +518,8 @@ document.querySelectorAll(".modal-mask").forEach((m) => {
 });
 
 async function loadConfig() {
+  $("cfg-api-base").value = API_BASE;
+  $("cfg-access-password").value = ACCESS_PASSWORD;
   try {
     const c = await api("/api/config");
     $("cfg-key").value = c.deepseek_api_key || "";
@@ -520,6 +534,12 @@ async function loadConfig() {
 }
 
 $("btn-save-config").addEventListener("click", async () => {
+  // 先保存连接设置（后端地址 / 访问口令），让后续请求走新后端
+  API_BASE = $("cfg-api-base").value.trim().replace(/\/+$/, "");
+  ACCESS_PASSWORD = $("cfg-access-password").value.trim();
+  localStorage.setItem("api_base", API_BASE);
+  localStorage.setItem("access_password", ACCESS_PASSWORD);
+
   const body = {
     deepseek_api_key: $("cfg-key").value.trim(),
     deepseek_model: $("cfg-model").value,
@@ -534,6 +554,7 @@ $("btn-save-config").addEventListener("click", async () => {
     await post("/api/config", body);
     toast("设置已保存", "success");
     closeModal("modal-settings");
+    await init();
   } catch (e) { toast(e.message, "error"); }
 });
 
@@ -619,7 +640,7 @@ async function loadArticle(id) {
     $("s3-theme").value = a.theme;
     renderPreview(a.content_md, a.title, "s3-preview", a.theme);
     if (a.cover_url) {
-      $("s3-cover-preview").innerHTML = `<img src="${a.cover_url}" alt="封面">`;
+      $("s3-cover-preview").innerHTML = `<img src="${absUrl(a.cover_url)}" alt="封面">`;
     }
     state.selectedImages = [];
     closeModal("modal-library");
@@ -674,7 +695,7 @@ async function loadMaterials() {
           <div class="sub">${fmtSize(m.size)} · ${m.created_at || ""}</div>
         </div>
         <div class="ops">
-          <a class="btn ghost small" href="/materials/${encodeURIComponent(m.name)}" target="_blank">打开</a>
+          <a class="btn ghost small" href="${absUrl('/materials/' + encodeURIComponent(m.name))}" target="_blank">打开</a>
           <button class="btn ghost small" data-mdel="${m.id}">删除</button>
         </div>
       </div>

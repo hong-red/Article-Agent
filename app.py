@@ -10,9 +10,9 @@ import os
 import re
 import time
 
-from fastapi import FastAPI, HTTPException, UploadFile, File
+from fastapi import FastAPI, HTTPException, UploadFile, File, Request
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import FileResponse
+from fastapi.responses import FileResponse, JSONResponse
 from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel
 
@@ -32,6 +32,17 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+
+# 简单访问口令：配置里设置了 access_password 后，所有 /api/* 请求需带 X-Access-Password 头
+@app.middleware("http")
+async def access_password_middleware(request: Request, call_next):
+    path = request.url.path
+    if path.startswith("/api/") and path != "/api/health":
+        pw = (config.load_config().get("access_password") or "").strip()
+        if pw and request.headers.get("x-access-password") != pw:
+            return JSONResponse({"detail": "需要访问口令（X-Access-Password）"}, status_code=401)
+    return await call_next(request)
 
 config.ensure_dirs()
 db.init_db()
