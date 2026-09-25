@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# 智能精灵 · 公众号文章生成器 —— 一键部署脚本（Ubuntu/Debian/CentOS/OpenCloudOS 通用）
+# 妙文 · 公众号文章生成器 —— 一键部署脚本（Ubuntu/Debian/CentOS/OpenCloudOS 通用）
 # 在服务器上执行：  bash deploy.sh
 # 可选指定端口：    PORT=8080 bash deploy.sh
 # 可选访问口令：    ACCESS_PASSWORD=你的口令 bash deploy.sh
