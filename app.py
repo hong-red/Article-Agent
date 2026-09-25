@@ -659,7 +659,9 @@ def index():
     return FileResponse(os.path.join(STATIC_DIR, "index.html"))
 
 
-app.mount("/static", StaticFiles(directory=STATIC_DIR), name="static")
 app.mount("/files", StaticFiles(directory=config.ARTICLES_DIR), name="files")
 app.mount("/materials", StaticFiles(directory=config.MATERIALS_DIR), name="materials")
 app.mount("/images", StaticFiles(directory=config.IMAGES_DIR), name="images")
+# 前端静态资源挂到根路径（style.css / app.js 等），放最后避免遮挡上面的 /api 与 /files 等；
+# 这样 index.html 用相对路径 style.css，能同时兼容 GitHub Pages 和本服务
+app.mount("/", StaticFiles(directory=STATIC_DIR, html=True), name="static")
