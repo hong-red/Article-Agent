@@ -1,4 +1,5 @@
 """微信公众号草稿箱推送（可选功能，需自行配置 AppID / AppSecret）。"""
+import json
 import os
 import re
 import time
@@ -145,7 +146,14 @@ def add_draft(appid, appsecret, article):
     url = f"https://api.weixin.qq.com/cgi-bin/draft/add?access_token={token}"
     payload = {"articles": [article]}
     try:
-        resp = requests.post(url, json=payload, timeout=60)
+        # 直接发 UTF-8，避免 requests 默认 ensure_ascii=True 把中文转成 \uXXXX，
+        # 否则微信侧可能把 \uXXXX 原样存进草稿，出现「传过来字是乱码」
+        resp = requests.post(
+            url,
+            data=json.dumps(payload, ensure_ascii=False).encode("utf-8"),
+            headers={"Content-Type": "application/json; charset=utf-8"},
+            timeout=60,
+        )
     except requests.RequestException as e:
         raise WeChatError(f"推送草稿失败：{e}")
 
