@@ -1,4 +1,4 @@
-"""智能精灵 · 公众号文章自动生成器 —— FastAPI 后端。
+"""妙文 · 公众号文章自动生成器 —— FastAPI 后端。
 
 三步生成：
   ① 主题 -> 生成题目 -> 选择
@@ -23,7 +23,7 @@ import llm
 import markdown_html as mh
 import wechat
 
-app = FastAPI(title="智能精灵 · 公众号文章生成器")
+app = FastAPI(title="妙文 · 公众号文章生成器")
 
 # 允许跨域，方便以后 APP / 其他前端调用
 app.add_middleware(
