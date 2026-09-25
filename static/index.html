@@ -87,7 +87,7 @@
         </div>
       </div>
       <div class="debug-box">
-        <input id="s2-feedback" placeholder="调试意见，例如：开头更吸引人一点 / 语气再活泼些 / 加一个小结">
+        <input id="s2-feedback" placeholder="调试意见，例如：开头更吸引人一点 / 语气再活泼些 / 加一个小结 / 字数修改">
         <button id="btn-refine" class="btn">按意见重新生成</button>
       </div>
       <div class="actions step-nav">
@@ -197,10 +197,13 @@
             <input id="cfg-api-base" placeholder="留空 = 同源；例如 http://1.2.3.4:8000">
           </div>
           <div class="form-row">
-            <label>访问口令（后端设置了才填）</label>
+            <label>访问口令</label>
             <input id="cfg-access-password" type="password" placeholder="与后端 access_password 一致">
           </div>
-          <p class="hint">前端可托管在 GitHub Pages，这里填你自己的后端地址即可；口令用于保护你自己的后端 API。</p>
+          <div class="form-row">
+            <button id="btn-connect" class="btn">连接并加载配置</button>
+          </div>
+          <p class="hint">先填好口令点「连接并加载配置」，会自动拉取已配好的密钥；直接点「保存设置」会把你服务器上的密钥清空。</p>
         </fieldset>
         <fieldset>
           <legend>DeepSeek（内容生成）</legend>

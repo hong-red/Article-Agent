@@ -238,12 +238,33 @@ function renderLocalGrid() {
       <div class="img-thumb"><img src="${img.url}" loading="lazy" alt=""></div>
       <div class="img-meta">
         <div class="img-label" title="${escapeHtml(img.name)}">${escapeHtml(img.name)}</div>
-        <button class="btn ghost small" data-luse="${i}">使用</button>
+        <div style="display:flex;gap:4px;">
+          <button class="btn ghost small" data-luse="${i}">使用</button>
+          <button class="btn ghost small" data-ldel="${i}">删除</button>
+        </div>
       </div>
     </div>`).join("");
   grid.querySelectorAll("[data-luse]").forEach((b) =>
     b.addEventListener("click", () => toggleLocal(parseInt(b.dataset.luse)))
   );
+  grid.querySelectorAll("[data-ldel]").forEach((b) =>
+    b.addEventListener("click", () => deleteLocalImage(parseInt(b.dataset.ldel)))
+  );
+}
+
+async function deleteLocalImage(i) {
+  const img = state.localImages[i];
+  if (!img) return;
+  if (!confirm(`确定删除图片「${img.name}」吗？`)) return;
+  try {
+    await api(`/api/images/${encodeURIComponent(img.name)}`, { method: "DELETE" });
+    state.selectedImages = state.selectedImages.filter((s) => s.key !== img.url);
+    toast("图片已删除", "success");
+    await loadLocalImages();
+    renderSelected();
+  } catch (e) {
+    toast(e.message, "error");
+  }
 }
 
 function toggleLocal(i) {
@@ -520,18 +541,30 @@ document.querySelectorAll(".modal-mask").forEach((m) => {
 async function loadConfig() {
   $("cfg-api-base").value = API_BASE;
   $("cfg-access-password").value = ACCESS_PASSWORD;
-  try {
-    const c = await api("/api/config");
-    $("cfg-key").value = c.deepseek_api_key || "";
-    $("cfg-model").value = c.deepseek_model || "deepseek-chat";
-    $("cfg-appid").value = c.wechat_appid || "";
-    $("cfg-secret").value = c.wechat_appsecret || "";
-    $("cfg-author").value = c.wechat_author || "";
-    $("cfg-source-url").value = c.wechat_source_url || "";
-    $("cfg-comment").checked = !!c.wechat_need_open_comment;
-    $("cfg-fans-comment").checked = !!c.wechat_only_fans_can_comment;
-  } catch (e) {}
+  const c = await api("/api/config");
+  $("cfg-key").value = c.deepseek_api_key || "";
+  $("cfg-model").value = c.deepseek_model || "deepseek-chat";
+  $("cfg-appid").value = c.wechat_appid || "";
+  $("cfg-secret").value = c.wechat_appsecret || "";
+  $("cfg-author").value = c.wechat_author || "";
+  $("cfg-source-url").value = c.wechat_source_url || "";
+  $("cfg-comment").checked = !!c.wechat_need_open_comment;
+  $("cfg-fans-comment").checked = !!c.wechat_only_fans_can_comment;
 }
+
+$("btn-connect").addEventListener("click", async () => {
+  API_BASE = $("cfg-api-base").value.trim().replace(/\/+$/, "");
+  ACCESS_PASSWORD = $("cfg-access-password").value.trim();
+  localStorage.setItem("api_base", API_BASE);
+  localStorage.setItem("access_password", ACCESS_PASSWORD);
+  try {
+    await loadConfig();
+    await loadStatic();
+    toast("已连接，配置已加载", "success");
+  } catch (e) {
+    toast("连接失败：" + e.message, "error");
+  }
+});
 
 $("btn-save-config").addEventListener("click", async () => {
   // 先保存连接设置（后端地址 / 访问口令），让后续请求走新后端
@@ -746,8 +779,7 @@ function escapeHtml(s) {
 }
 
 /* ---------- 初始化 ---------- */
-async function init() {
-  await loadConfig();
+async function loadStatic() {
   try {
     const themes = await api("/api/themes");
     state.themes = themes;
@@ -758,6 +790,11 @@ async function init() {
     $("s1-template").innerHTML = tpls.map((t) => `<option value="${t.key}">${t.name}</option>`).join("");
     if (tpls.length) state.template = tpls[0].key;
   } catch (e) {}
+}
+
+async function init() {
+  try { await loadConfig(); } catch (e) {}
+  await loadStatic();
 }
 
 init();
