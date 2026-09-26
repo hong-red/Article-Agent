@@ -70,6 +70,8 @@ class ContentReq(BaseModel):
     feedback: str = ""
     previous_content: str = ""
     template: str = "general"
+    material_ids: list = []
+    material_note: str = ""
 
 
 class FormatReq(BaseModel):
@@ -275,6 +277,29 @@ def generate_titles(req: TitleReq):
 
 # ---------------- 第 2 步：生成正文 ----------------
 @app.post("/api/generate/content")
+def _read_material_text(material_id, limit=8000):
+    """读取文本类素材内容供 AI 引用；图片/二进制返回 None。"""
+    try:
+        mid = int(material_id)
+    except (TypeError, ValueError):
+        return None
+    m = db.get_material(mid)
+    if not m or not m.get("path") or not os.path.exists(m["path"]):
+        return None
+    ext = os.path.splitext(m["path"])[1].lower()
+    if ext in (".jpg", ".jpeg", ".png", ".gif", ".webp", ".bmp", ".zip", ".pdf", ".doc", ".docx"):
+        return None
+    try:
+        with open(m["path"], "r", encoding="utf-8", errors="ignore") as f:
+            text = f.read()
+    except Exception:
+        return None
+    text = (text or "").strip()
+    if not text:
+        return None
+    return f"【素材《{m['name']}》】\n{text[:limit]}"
+
+
 def generate_content(req: ContentReq):
     style_line = f"风格倾向：{req.style}" if req.style else ""
     extra_line = f"补充说明：{req.extra}" if req.extra else ""
@@ -288,6 +313,19 @@ def generate_content(req: ContentReq):
         f"【上一版内容】\n{req.previous_content}\n请基于这版内容修改，而不是完全重写。"
         if req.previous_content else ""
     )
+    # 素材库：读取选中素材内容供 AI 引用
+    mat_segs = []
+    for mid in (req.material_ids or []):
+        seg = _read_material_text(mid)
+        if seg:
+            mat_segs.append(seg)
+    material_block = ""
+    if mat_segs:
+        note = f"优化要求：{req.material_note}\n" if (req.material_note or "").strip() else ""
+        material_block = (
+            "\n【参考资料/素材】请务必结合下面的素材内容来写，引用其中的关键信息、数据或观点。\n"
+            + note + "\n\n".join(mat_segs) + "\n"
+        )
     user = (
         f"请根据下面的题目和主题，写一篇结构完整、可读性强、可直接发布的公众号文章。\n\n"
         f"题目：{req.title}\n"
@@ -300,6 +338,7 @@ def generate_content(req: ContentReq):
         "2. 有清晰的开头引入、主体分点、结尾总结\n"
         "3. 语言自然流畅，像真人写作，避免 AI 腔\n"
         "4. 篇幅适中（1000~1800 字）\n"
+        + (material_block + "\n" if material_block else "")
         + (feedback_line + "\n" if feedback_line else "")
         + (previous_line + "\n" if previous_line else "")
     )
