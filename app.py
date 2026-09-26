@@ -276,7 +276,6 @@ def generate_titles(req: TitleReq):
 
 
 # ---------------- 第 2 步：生成正文 ----------------
-@app.post("/api/generate/content")
 def _read_material_text(material_id, limit=8000):
     """读取素材文本内容供 AI 引用（txt/md/docx/pdf）；图片/压缩包返回 None。"""
     try:
@@ -316,6 +315,7 @@ def _read_material_text(material_id, limit=8000):
     return f"【素材《{name}》】\n{text.strip()[:limit]}"
 
 
+@app.post("/api/generate/content")
 def generate_content(req: ContentReq):
     style_line = f"风格倾向：{req.style}" if req.style else ""
     extra_line = f"补充说明：{req.extra}" if req.extra else ""
