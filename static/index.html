@@ -90,6 +90,11 @@
         <input id="s2-feedback" placeholder="调试意见，例如：开头更吸引人一点 / 语气再活泼些 / 加一个小结 / 字数修改">
         <button id="btn-refine" class="btn">按意见重新生成</button>
       </div>
+      <div class="debug-box">
+        <input id="s2-matnote" placeholder="需要根据素材库进行优化，例如：结合所选素材补充数据与观点">
+        <button id="btn-pick-materials" class="btn ghost">从素材库选择</button>
+      </div>
+      <div id="s2-materials" class="hidden"></div>
       <div class="actions step-nav">
         <button class="btn ghost" data-goto="1">上一步</button>
         <button id="btn-to-step3" class="btn primary">下一步：选图配图</button>
@@ -282,6 +287,22 @@
           </div>
           <div id="materials-list" class="library-list"></div>
         </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="modal-materials" class="modal-mask hidden">
+    <div class="modal">
+      <div class="modal-head">
+        <h3>选择素材（可多选）</h3>
+        <button class="icon-btn" data-close="modal-materials">×</button>
+      </div>
+      <div class="modal-body">
+        <div id="mat-picker-list" class="library-list"></div>
+      </div>
+      <div class="modal-foot">
+        <button class="btn ghost" data-close="modal-materials">取消</button>
+        <button class="btn primary" id="btn-confirm-materials">确定</button>
       </div>
     </div>
   </div>

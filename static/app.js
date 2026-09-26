@@ -27,6 +27,9 @@ const state = {
   selectedImages: [],   // [{key, url, name}]
   localImages: [],      // [{name, url, size}]
   imgResults: [],       // [{url, thumb, title, source, page}]
+  // 素材库优化
+  materialIds: [],      // 已选素材 id（字符串）
+  materials: [],        // [{id, name}]
 };
 
 /* ---------- 基础 ---------- */
@@ -150,6 +153,7 @@ $("btn-gen-content").addEventListener("click", async () => {
       topic: state.topic, title: state.title,
       style: state.style, extra: state.extra, template: state.template,
       feedback: "", previous_content: "",
+      material_ids: state.materialIds, material_note: $("s2-matnote").value.trim(),
     });
     state.contentMd = r.content;
     $("s2-md").value = r.content;
@@ -173,6 +177,7 @@ $("btn-refine").addEventListener("click", async () => {
       topic: state.topic, title: state.title,
       style: state.style, extra: state.extra, template: state.template,
       feedback, previous_content: $("s2-md").value,
+      material_ids: state.materialIds, material_note: $("s2-matnote").value.trim(),
     });
     state.contentMd = r.content;
     $("s2-md").value = r.content;
@@ -184,6 +189,48 @@ $("btn-refine").addEventListener("click", async () => {
   } finally {
     btn.disabled = false; btn.textContent = "按意见重新生成";
   }
+});
+
+/* ---------- 根据素材库优化 ---------- */
+async function openMaterialPicker() {
+  try {
+    const items = await api("/api/materials");
+    const list = $("mat-picker-list");
+    if (!items.length) {
+      list.innerHTML = '<p class="muted">素材库为空，请先在「本地库」上传素材</p>';
+    } else {
+      list.innerHTML = items.map(m => {
+        const checked = state.materialIds.includes(String(m.id)) ? "checked" : "";
+        return `<label class="mat-check" style="display:flex;align-items:center;gap:8px;padding:6px 0;cursor:pointer;"><input type="checkbox" value="${m.id}" ${checked}> <span>${escapeHtml(m.name)}</span></label>`;
+      }).join("");
+    }
+    openModal("modal-materials");
+  } catch (e) { toast(e.message, "error"); }
+}
+
+function renderSelectedMaterials() {
+  const wrap = $("s2-materials");
+  if (!state.materials.length) { wrap.classList.add("hidden"); wrap.innerHTML = ""; return; }
+  wrap.classList.remove("hidden");
+  wrap.innerHTML = '<span style="font-size:13px;color:#555;margin-right:6px;">已选素材：</span>' +
+    state.materials.map((m, i) => `<span class="badge">${escapeHtml(m.name)}<a href="javascript:void 0" data-mi="${i}" style="color:#999;text-decoration:none;margin-left:4px;">×</a></span>`).join(" ");
+  wrap.querySelectorAll("a[data-mi]").forEach(a => a.addEventListener("click", () => {
+    state.materials.splice(+a.dataset.mi, 1);
+    state.materialIds.splice(+a.dataset.mi, 1);
+    renderSelectedMaterials();
+  }));
+}
+
+$("btn-pick-materials").addEventListener("click", openMaterialPicker);
+$("btn-confirm-materials").addEventListener("click", () => {
+  const boxes = [...document.querySelectorAll("#mat-picker-list input[type=checkbox]:checked")];
+  state.materialIds = boxes.map(b => b.value);
+  state.materials = boxes.map(b => {
+    const span = b.closest("label").querySelector("span");
+    return { id: b.value, name: span ? span.textContent.trim() : "" };
+  });
+  renderSelectedMaterials();
+  closeModal("modal-materials");
 });
 
 $("s2-md").addEventListener("input", debounce(() => {
