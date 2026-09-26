@@ -278,7 +278,7 @@ def generate_titles(req: TitleReq):
 # ---------------- 第 2 步：生成正文 ----------------
 @app.post("/api/generate/content")
 def _read_material_text(material_id, limit=8000):
-    """读取文本类素材内容供 AI 引用；图片/二进制返回 None。"""
+    """读取素材文本内容供 AI 引用（txt/md/docx/pdf）；图片/压缩包返回 None。"""
     try:
         mid = int(material_id)
     except (TypeError, ValueError):
@@ -286,18 +286,34 @@ def _read_material_text(material_id, limit=8000):
     m = db.get_material(mid)
     if not m or not m.get("path") or not os.path.exists(m["path"]):
         return None
-    ext = os.path.splitext(m["path"])[1].lower()
-    if ext in (".jpg", ".jpeg", ".png", ".gif", ".webp", ".bmp", ".zip", ".pdf", ".doc", ".docx"):
+    p = m["path"]
+    ext = os.path.splitext(p)[1].lower()
+    name = m.get("name") or os.path.basename(p)
+    if ext in (".jpg", ".jpeg", ".png", ".gif", ".webp", ".bmp", ".zip", ".rar", ".7z"):
         return None
+    text = None
     try:
-        with open(m["path"], "r", encoding="utf-8", errors="ignore") as f:
-            text = f.read()
+        if ext == ".docx":
+            import docx
+            d = docx.Document(p)
+            text = "\n".join(para.text for para in d.paragraphs if para.text.strip())
+        elif ext == ".pdf":
+            import pdfplumber
+            parts = []
+            with pdfplumber.open(p) as pdf:
+                for page in pdf.pages:
+                    t = page.extract_text() or ""
+                    if t.strip():
+                        parts.append(t)
+            text = "\n".join(parts)
+        else:
+            with open(p, "r", encoding="utf-8", errors="ignore") as f:
+                text = f.read()
     except Exception:
         return None
-    text = (text or "").strip()
-    if not text:
+    if not text or not text.strip():
         return None
-    return f"【素材《{m['name']}》】\n{text[:limit]}"
+    return f"【素材《{name}》】\n{text.strip()[:limit]}"
 
 
 def generate_content(req: ContentReq):
