@@ -65,6 +65,24 @@ function debounce(fn, ms) {
   return (...args) => { clearTimeout(t); t = setTimeout(() => fn(...args), ms); };
 }
 
+/* 复制文本：优先 Clipboard API（需 HTTPS/localhost），否则回退到 textarea + execCommand */
+async function copyText(text) {
+  if (navigator.clipboard && window.isSecureContext) {
+    await navigator.clipboard.writeText(text);
+    return;
+  }
+  const ta = document.createElement("textarea");
+  ta.value = text;
+  ta.style.position = "fixed";
+  ta.style.opacity = "0";
+  document.body.appendChild(ta);
+  ta.focus();
+  ta.select();
+  const ok = document.execCommand("copy");
+  document.body.removeChild(ta);
+  if (!ok) throw new Error("当前环境不支持自动复制，请手动选择文本复制");
+}
+
 /* ---------- 步骤切换 ---------- */
 function goTo(n) {
   state.step = n;
@@ -489,7 +507,7 @@ $("btn-copy-html").addEventListener("click", async () => {
   if (!md.trim()) { toast("正文为空", "error"); return; }
   try {
     const r = await post("/api/render", { content: md, title, theme: state.theme });
-    await navigator.clipboard.writeText(r.html);
+    await copyText(r.html);
     toast("已复制 HTML，可粘贴到秀米或公众号编辑器", "success");
   } catch (e) {
     toast("复制失败：" + e.message, "error");
@@ -664,7 +682,7 @@ $("btn-get-ip").addEventListener("click", async () => {
     if (ips.length) {
       const text = ips.join("、");
       input.value = text;
-      try { await navigator.clipboard.writeText(ips[0]); toast("本机公网 IP：" + text + "（已复制第一个）", "success"); }
+      try { await copyText(ips[0]); toast("本机公网 IP：" + text + "（已复制第一个）", "success"); }
       catch (e) { toast("本机公网 IP：" + text, "success"); }
     } else {
       toast("获取失败，请手动到 myip.ipip.net 查询本机公网 IP", "error");
